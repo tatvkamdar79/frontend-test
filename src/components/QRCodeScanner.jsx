@@ -1,7 +1,14 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
+import { search } from "../utils/utils";
 
-const QRCodeScanner = ({ openQRCodeScanner }) => {
+const QRCodeScanner = ({
+  openQRCodeScanner,
+  setOpenQRCodeScanner,
+  setProducts,
+  setSearchText,
+  setLoading,
+}) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [img, setImg] = useState(null);
@@ -60,15 +67,17 @@ const QRCodeScanner = ({ openQRCodeScanner }) => {
     const imageDataURL = canvas.toDataURL("image/jpeg");
 
     console.log(imageDataURL === "data:,");
-    setImg(imageDataURL);
+    // setImg(imageDataURL);
+    sendImageToBackend(imageDataURL);
 
     // FOR DEV TESTING ONLY
     // setCapturedImages((prevImages) => [...prevImages, imageDataURL]);
   };
 
-  const sendImageToBackend = async () => {
+  const sendImageToBackend = async (img) => {
+    console.log("sending imag to vbackend now");
     const cleanedBase64Data = img.replace(/^data:image\/\w+;base64,/, "");
-    console.log(cleanedBase64Data);
+    // console.log(cleanedBase64Data);
     // const url = "https://tatvk79.pythonanywhere.com/decode_qr";
     const url = "http://localhost:5000/decode_qr";
     const customHeaders = {
@@ -79,18 +88,28 @@ const QRCodeScanner = ({ openQRCodeScanner }) => {
       { img: cleanedBase64Data },
       customHeaders
     );
-    console.log(response.data);
+    console.log(response.data.qr_data);
+    let qr_data = response.data.qr_data;
+
+    if (qr_data !== null) {
+      setSearchText(qr_data);
+      setLoading(true);
+      const res = await search(qr_data);
+      setLoading(false);
+      setProducts(res.data);
+      setOpenQRCodeScanner(false);
+    }
   };
 
-  // useEffect(() => {
-  //   if (openQRCodeScanner) {
-  //     const interval = setInterval(captureImage, 5000); // Capture image every 1 second
+  useEffect(() => {
+    if (openQRCodeScanner) {
+      const interval = setInterval(captureImage, 2000); // Capture image every 1 second
 
-  //     return () => {
-  //       clearInterval(interval);
-  //     };
-  //   }
-  // }, [openQRCodeScanner]);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [openQRCodeScanner]);
 
   return (
     <div>
@@ -99,8 +118,8 @@ const QRCodeScanner = ({ openQRCodeScanner }) => {
       <canvas ref={canvasRef} style={{ display: "none" }} />
       {openQRCodeScanner && (
         <>
-          <button onClick={captureImage}>Click Image</button>
-          <button onClick={sendImageToBackend}>Send Images to Backend</button>
+          {/* <button onClick={captureImage}>Click Image</button> */}
+          {/* <button onClick={sendImageToBackend}>Send Images to Backend</button> */}
         </>
       )}
       {/* TO VIEW CAPTURED IMAGES FOR DEV TESTING */}

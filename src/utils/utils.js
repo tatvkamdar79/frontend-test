@@ -14,6 +14,12 @@ export const search = async (searchQuery) => {
   const url = `${baseUrl}${baseProductAPI}/search?searchQuery=${searchQuery}`;
   try {
     const response = await axios.get(url);
+    if (response.data.length === 0) {
+      return {
+        data: response.data,
+        errors: [`No products found with the tag ${searchQuery}`],
+      };
+    }
     return {
       data: response.data,
       errors: [],

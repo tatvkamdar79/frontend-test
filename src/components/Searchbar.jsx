@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { search } from "../utils/utils.js";
 
-const Searchbar = ({ setProducts }) => {
-  const [searchText, setSearchText] = useState("");
+const Searchbar = ({ setProducts, searchText, setSearchText, setLoading }) => {
   const [debounceTimer, setDebounceTimer] = useState(null);
   const [searchErrors, setSearchErrors] = useState([]);
 
@@ -18,7 +17,9 @@ const Searchbar = ({ setProducts }) => {
       if (searchQuery.trim() == "") {
         return;
       }
+      setLoading(true);
       const response = await search(searchQuery);
+      setLoading(false);
       if (response.data) {
         console.log(response);
         let products = response.data;
