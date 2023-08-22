@@ -113,7 +113,6 @@ const QRCodeScanner = ({
 
   return (
     <div>
-      <h1>Video Stream and Image Capture</h1>
       <video ref={videoRef} autoPlay playsInline />
       <canvas ref={canvasRef} style={{ display: "none" }} />
       {openQRCodeScanner && (

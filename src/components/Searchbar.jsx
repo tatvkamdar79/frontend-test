@@ -14,14 +14,14 @@ const Searchbar = ({ setProducts, searchText, setSearchText, setLoading }) => {
     }
 
     const newDebounceTimer = setTimeout(async () => {
-      if (searchQuery.trim() == "") {
+      if (searchQuery.trim() === "") {
         return;
       }
       setLoading(true);
       const response = await search(searchQuery);
       setLoading(false);
       if (response.data) {
-        console.log(response);
+        console.log("LOADED PRODUCTS FOR SEARCH", searchQuery);
         let products = response.data;
         setProducts(products);
         setSearchErrors(response.errors);
@@ -35,11 +35,11 @@ const Searchbar = ({ setProducts, searchText, setSearchText, setLoading }) => {
   };
 
   return (
-    <div className="w-5/6 mx-auto p-5">
+    <div className="w-5/6 mx-auto p-5 pb-0">
       <input
         type="text"
         placeholder="Search here..."
-        className="w-full px-4 py-2 text-2xl text-white font-semibold rounded-md border-4 border-gray-400 outline-none focus:border-teal-400 bg-inherit transition-all duration-300"
+        className="w-full px-4 py-2 text-2xl text-black font-semibold rounded-md border-2 border-gray-300 outline-none focus:border-teal-400 bg-white transition-all duration-300"
         value={searchText}
         onChange={handleInputChange}
       />

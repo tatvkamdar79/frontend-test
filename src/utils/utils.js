@@ -1,7 +1,7 @@
 import axios from "axios";
+import { baseUrl } from "./constants";
 
-export const baseUrl = "http://localhost:8080";
-export const baseProductAPI = "/product"; // Removed baseUrl from here
+const productAPI = "/product";
 
 export const search = async (searchQuery) => {
   searchQuery = searchQuery.trim();
@@ -11,7 +11,7 @@ export const search = async (searchQuery) => {
       errors: ["Minimum 3 letter search"],
     };
   }
-  const url = `${baseUrl}${baseProductAPI}/search?searchQuery=${searchQuery}`;
+  const url = `${baseUrl}${productAPI}/search?searchQuery=${searchQuery}`;
   try {
     const response = await axios.get(url);
     if (response.data.length === 0) {
@@ -20,8 +20,20 @@ export const search = async (searchQuery) => {
         errors: [`No products found with the tag ${searchQuery}`],
       };
     }
+    const dict = {};
+    const unfilteredProducts = response.data;
+    for (let i = 0; i < unfilteredProducts.length; i++) {
+      let modelNumber = unfilteredProducts[i].modelNumber;
+
+      if (dict.hasOwnProperty(modelNumber)) {
+        dict[modelNumber].push(unfilteredProducts[i]);
+      } else {
+        dict[modelNumber] = [unfilteredProducts[i]];
+      }
+    }
+    console.log("DATA LOADED FROM SEARCH FOR", searchQuery);
     return {
-      data: response.data,
+      data: dict,
       errors: [],
     };
   } catch (error) {
