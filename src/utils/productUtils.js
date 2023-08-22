@@ -28,16 +28,16 @@ export const formatProductWithVariantsData = (products, modelNumber) => {
   // Extract sizes, colors, styles, and materials
   const variants = productWithVariants.map((product) => product.variant);
   const sizes = Array.from(
-    new Set(variants.map((variant) => variant.size).filter(Boolean))
+    new Set(variants.map((variant) => variant?.size).filter(Boolean))
   );
   const colors = Array.from(
-    new Set(variants.map((variant) => variant.color).filter(Boolean))
+    new Set(variants.map((variant) => variant?.color).filter(Boolean))
   );
   const styles = Array.from(
-    new Set(variants.map((variant) => variant.style).filter(Boolean))
+    new Set(variants.map((variant) => variant?.style).filter(Boolean))
   );
   const materials = Array.from(
-    new Set(variants.map((variant) => variant.material).filter(Boolean))
+    new Set(variants.map((variant) => variant?.material).filter(Boolean))
   );
 
   const variantOptions = {

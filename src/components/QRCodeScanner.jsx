@@ -79,7 +79,8 @@ const QRCodeScanner = ({
     const cleanedBase64Data = img.replace(/^data:image\/\w+;base64,/, "");
     // console.log(cleanedBase64Data);
     // const url = "https://tatvk79.pythonanywhere.com/decode_qr";
-    const url = "http://localhost:5000/decode_qr";
+    const url = "https://tatvk79.pythonanywhere.com/decode_qr";
+    // const url = "http://localhost:5000/decode_qr";
     const customHeaders = {
       "content-type": "application/json",
     };

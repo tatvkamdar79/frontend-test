@@ -12,6 +12,8 @@ const App = () => {
   const { checkIsUserAuthenticatedAlready } = useCookies();
 
   const [user, setUser] = useState({});
+  const [products, setProducts] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     if (checkIsUserAuthenticatedAlready()) {
@@ -29,7 +31,17 @@ const App = () => {
             // PLACE ALL PROTECTED ROUTES HERE
             <>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/pos" element={<POS />} />
+              <Route
+                path="/pos"
+                element={
+                  <POS
+                    products={products}
+                    setProducts={setProducts}
+                    searchText={searchText}
+                    setSearchText={setSearchText}
+                  />
+                }
+              />
               <Route path="/pos/:modelNumber" element={<Product />} />
             </>
           ) : (

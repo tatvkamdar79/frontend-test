@@ -3,10 +3,10 @@ import Searchbar from "../components/Searchbar";
 import QRCodeScanner from "../components/QRCodeScanner";
 import ItemList from "../components/ItemList";
 
-const POS = () => {
+const POS = ({ products, setProducts, searchText, setSearchText }) => {
   const [openQRCodeScanner, setOpenQRCodeScanner] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [searchText, setSearchText] = useState("");
+  // const [products, setProducts] = useState([]);
+  // const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
 
   return (
