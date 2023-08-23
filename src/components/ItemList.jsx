@@ -7,7 +7,7 @@ const ItemList = ({ products }) => {
     console.log("PRODUCT CHANGED FROM ITEM LIST");
   }, [products]);
   return (
-    <div className="w-5/6 mx-auto">
+    <div className="w-11/12 h-[77vh] mx-auto overflow-y-scroll">
       <ul className="w-full space-y-4">
         {Object.keys(products).map((modelNumber) => {
           let productData = formatProductWithVariantsData(

@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import Searchbar from "../components/Searchbar";
 import QRCodeScanner from "../components/QRCodeScanner";
 import ItemList from "../components/ItemList";
+import CartComponent from "../components/CartComponent";
+import Loader from "../components/Loader";
 
 const POS = ({ products, setProducts, searchText, setSearchText }) => {
   const [openQRCodeScanner, setOpenQRCodeScanner] = useState(false);
-  // const [products, setProducts] = useState([]);
-  // const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="h-screen bg-gray-100 p-6">
-      <div className="max-w-screen-xl mx-auto">
+    <div className="h-screen bg-gray-100 p-6 overflow-hidden">
+      <div className="w-full md:max-w-screen-2xl mx-auto">
         <div className="bg-white p-6 rounded-lg shadow-md">
           <Searchbar
             setProducts={setProducts}
@@ -38,16 +38,13 @@ const POS = ({ products, setProducts, searchText, setSearchText }) => {
           </div>
           {loading && (
             <div className="flex justify-center mt-6">
-              <img
-                src="https://i.pinimg.com/originals/8a/1e/31/8a1e31b5d577f9da0b8c30c7364d004a.gif"
-                alt="Loading..."
-                className="h-20 animate-pulse"
-              />
+              <Loader />
             </div>
           )}
           <ItemList products={products} />
         </div>
       </div>
+      <CartComponent />
     </div>
   );
 };
