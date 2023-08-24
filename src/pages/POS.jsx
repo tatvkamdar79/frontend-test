@@ -39,13 +39,13 @@ const POS = ({ products, setProducts, searchText, setSearchText }) => {
               <div className="w-[50%]">
                 <CartComponent />
               </div>
-              {/* <Link
+              <Link
                 to={"/pos/checkout"}
                 className="w-[20%] flex justify-center gap-x-2 px-4 py-2 xs:px-6 xs:py-3 rounded-md text-white font-semibold text-center bg-green-500 hover:bg-amber-500 transition-all duration-200"
               >
                 <p className="font-semibold text-lg">Checkout</p>
                 <IoBagCheckOutline size={25} />
-              </Link> */}
+              </Link>
             </div>
             {openQRCodeScanner && (
               <QRCodeScanner
