@@ -10,6 +10,7 @@ import Checkout from "./pages/Checkout";
 export const UserContext = createContext();
 export const CartContext = createContext();
 export const ViewSideCartContext = createContext();
+export const GlobalDiscountContext = createContext();
 
 const App = () => {
   const { checkIsUserAuthenticatedAlready } = useCookies();
@@ -18,7 +19,8 @@ const App = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [viewSideCart, setViewSideCart] = useState(false);
+  const [viewSideCart, setViewSideCart] = useState(true);
+  const [globalDiscount, setGlobalDiscount] = useState(null);
 
   useEffect(() => {
     if (checkIsUserAuthenticatedAlready()) {
@@ -41,31 +43,35 @@ const App = () => {
           <ViewSideCartContext.Provider
             value={{ viewSideCart, setViewSideCart }}
           >
-            <Routes>
-              {user && user?.isAuthenticated && user?.isAuthenticated ? (
-                // PLACE ALL PROTECTED ROUTES HERE
-                <>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route
-                    path="/pos"
-                    element={
-                      <POS
-                        products={products}
-                        setProducts={setProducts}
-                        searchText={searchText}
-                        setSearchText={setSearchText}
-                      />
-                    }
-                  />
-                  <Route path="/pos/:modelNumber" element={<Product />} />
-                  <Route path="/pos/checkout" element={<Checkout />} />
-                </>
-              ) : (
-                <>
-                  <Route path="*" element={<Login />} />
-                </>
-              )}
-            </Routes>
+            <GlobalDiscountContext.Provider
+              value={{ globalDiscount, setGlobalDiscount }}
+            >
+              <Routes>
+                {user && user?.isAuthenticated && user?.isAuthenticated ? (
+                  // PLACE ALL PROTECTED ROUTES HERE
+                  <>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route
+                      path="/pos"
+                      element={
+                        <POS
+                          products={products}
+                          setProducts={setProducts}
+                          searchText={searchText}
+                          setSearchText={setSearchText}
+                        />
+                      }
+                    />
+                    <Route path="/pos/:modelNumber" element={<Product />} />
+                    <Route path="/pos/checkout" element={<Checkout />} />
+                  </>
+                ) : (
+                  <>
+                    <Route path="*" element={<Login />} />
+                  </>
+                )}
+              </Routes>
+            </GlobalDiscountContext.Provider>
           </ViewSideCartContext.Provider>
         </CartContext.Provider>
       </UserContext.Provider>

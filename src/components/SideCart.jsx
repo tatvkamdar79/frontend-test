@@ -1,23 +1,58 @@
-import React, { useContext } from "react";
-import { CartContext, ViewSideCartContext } from "../App";
+import React, { useContext, useState } from "react";
+import {
+  CartContext,
+  GlobalDiscountContext,
+  ViewSideCartContext,
+} from "../App";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { MdClose } from "react-icons/md";
+import { BsCurrencyRupee } from "react-icons/bs";
+import useCart from "../hooks/useCart";
+import { FaMinus, FaPlus } from "react-icons/fa6";
 
 const SideCart = () => {
   const { cart } = useContext(CartContext);
+  const { globalDiscount, setGlobalDiscount } = useContext(
+    GlobalDiscountContext
+  );
   const { viewSideCart, setViewSideCart } = useContext(ViewSideCartContext);
-  console.log(cart);
+  const {
+    addProductToCart,
+    getItemQuantityFromCart,
+    removeProductFromCart,
+    applyDiscountToItem,
+    showFinalPriceForItem,
+    applyGlobalDiscountToCart,
+    getTotalPriceForCart,
+    clearCart,
+  } = useCart();
 
   const closeSideCart = () => {
     setViewSideCart(false);
   };
   const handleClearCart = () => {
-    // Implement a confirmation dialog before clearing the cart
     const shouldClear = window.confirm(
       "Are you sure you want to clear the cart?"
     );
+    if (shouldClear) {
+      clearCart();
+    }
   };
-
+  const getVariantDetails = (product) => {
+    if (product.variant) {
+      const variantFields = Object.keys(product.variant);
+      variantFields.sort();
+      const variantDetails = variantFields
+        .map(
+          (variantField) =>
+            `${variantField.charAt(0).toUpperCase()}${variantField.slice(
+              1
+            )} : ${product.variant[variantField]}`
+        )
+        .join(", ");
+      return variantDetails;
+    }
+  };
   return (
     <div
       className={`fixed top-0 right-0 h-screen lg:w-1/2 w-[70%] overflow-x-hidden bg-white transition-all duration-700 transform ${
@@ -37,29 +72,117 @@ const SideCart = () => {
           </p>
         ) : (
           <ul className="space-y-3">
-            {cart.map((item) => (
+            {cart.map(({ product, quantity, discount }) => (
               <li
-                key={item.product._id}
+                key={product._id}
                 className="flex items-center justify-between border-b pb-2"
               >
                 <div>
                   <p className="text-lg font-semibold">
-                    {item.product.productTitle}
+                    {product.productTitle}
                   </p>
-                  <p className="text-gray-600">Quantity: {item.quantity}</p>
+                  <p>{getVariantDetails(product)}</p>
+                  <p className="text-gray-600">Quantity: {quantity}</p>
+                  <p className="flex place-items-center text-xl text-green-600">
+                    <BsCurrencyRupee size={20} />
+                    {showFinalPriceForItem(product)}
+                    {/* {product.mrp * quantity} */}
+                  </p>
+                  <p className="flex place-items-center text-xl text-red-600">
+                    <input
+                      type="number"
+                      name="individualDiscount"
+                      id="individualDiscount"
+                      className="w-48 text-sm border-2 border-gray-300 rounded-md px-2 py-1 text-green-500 font-semibold outline-none focus:border-gray-500"
+                      max={100}
+                      min={0}
+                      value={discount ? discount : null}
+                      placeholder="Add Discount For Item %"
+                      onChange={(e) => {
+                        if (
+                          parseFloat(e.target.value) &&
+                          (parseFloat(e.target.value) > 100 ||
+                            parseFloat(e.target.value) < 0)
+                        ) {
+                          return false;
+                        }
+                        if (e.target.value === "" || parseInt(e.target.value)) {
+                          applyDiscountToItem(product, e.target.value);
+                        }
+                      }}
+                    />
+                  </p>
                 </div>
-                <button
-                  className="text-red-500 hover:text-red-600 transition-all"
-                  onClick={() =>
-                    removeProductFromCart(item.product, item.quantity)
-                  }
-                >
-                  Remove
-                </button>
+                <div className="flex justify-between gap-x-2 place-items-center">
+                  <button onClick={() => addProductToCart(product, 1)}>
+                    <FaPlus
+                      size={25}
+                      className="text-green-500 hover:text-green-600 transition-all"
+                    />
+                  </button>
+                  <input
+                    type="number"
+                    name="quantity"
+                    id="quantity"
+                    className="w-20 text-center border-2 rounded-md p-2 focus:border-amber-400 outline-none transition-all duration-300"
+                    value={getItemQuantityFromCart(product)}
+                    onChange={(e) => {
+                      if (e.target.value != "" && e.target.value >= 0) {
+                        addProductToCart(product, e.target.value, true);
+                      }
+                    }}
+                  />
+                  <button onClick={() => removeProductFromCart(product, 1)}>
+                    <FaMinus
+                      size={25}
+                      className="text-red-400 hover:text-red-600 transition-all"
+                    />
+                  </button>
+                  <button
+                    className="text-red-500 hover:text-red-600 transition-all"
+                    onClick={() => removeProductFromCart(product, quantity)}
+                  >
+                    Remove
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
         )}
+        <div className="flex flex-col gap-x-2 mt-5">
+          <p className="text-xl font-semibold text-gray-500">Total Discount</p>
+          <input
+            type="number"
+            name="globalDiscount"
+            id="globalDiscount"
+            className="w-48 text-sm border-2 border-gray-300 rounded-md px-2 py-1 text-green-500 font-semibold outline-none focus:border-gray-500"
+            max={100}
+            min={0}
+            value={globalDiscount}
+            placeholder="Add Discount For Item %"
+            onChange={(e) => {
+              if (e.target.value === "") {
+                setGlobalDiscount(null);
+              }
+              if (
+                parseFloat(e.target.value) &&
+                (parseFloat(e.target.value) > 100 ||
+                  parseFloat(e.target.value) < 0)
+              ) {
+                return false;
+              }
+              setGlobalDiscount(parseFloat(e.target.value));
+            }}
+          />
+        </div>
+        <div className="h-0.5 w-full bg-gray-300 my-3" />
+        <div className="w-full flex justify-between place-items-center gap-x-2">
+          <p className="text-xl font-semibold text-gray-500">Total</p>
+          <p className="flex place-items-center text-xl font-semibold text-gray-600">
+            <BsCurrencyRupee size={20} /> <span>{getTotalPriceForCart()}</span>
+          </p>
+        </div>
+        <div className="h-0.5 w-full bg-gray-300 my-2" />
         <div className="flex justify-between mt-6">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
