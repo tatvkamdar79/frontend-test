@@ -30,33 +30,38 @@ const Product = () => {
 
   const availableFilters = {};
   productVariants.forEach((product) => {
-    Object.keys(product.variant).forEach((filterType) => {
-      if (!availableFilters[filterType]) {
-        availableFilters[filterType] = new Set();
-      }
-      availableFilters[filterType].add(product.variant[filterType]);
-    });
+    if (product.variant) {
+      Object.keys(product.variant).forEach((filterType) => {
+        if (!availableFilters[filterType]) {
+          availableFilters[filterType] = new Set();
+        }
+        availableFilters[filterType].add(product.variant[filterType]);
+      });
+    }
   });
 
   return (
     <div className="h-screen flex flex-col md:flex-row p-8 bg-gray-100">
       <section className="w-11/12 mx-auto md:w-1/2 md:mx-0 md:order-none order-2">
         <div className="flex mb-1 font-semibold text-gray-800 gap-x-4">
-          {Object.entries(availableFilters).map(([filterType, values]) => (
-            <select
-              key={filterType}
-              value={selectedFilters[filterType] || ""}
-              onChange={(e) => handleFilterChange(filterType, e.target.value)}
-              className="p-2 border rounded-md shadow-md focus:outline-none focus:border-cyan-500 transition-all duration-300 outline-none"
-            >
-              <option value="">{`Select ${filterType}`}</option>
-              {Array.from(values).map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          ))}
+          {Object.entries(availableFilters) &&
+            Object.entries(availableFilters).map(([filterType, values]) => (
+              <select
+                key={filterType}
+                value={selectedFilters[filterType] || ""}
+                onChange={(e) => handleFilterChange(filterType, e.target.value)}
+                className="p-2 border rounded-md shadow-md focus:outline-none focus:border-cyan-500 transition-all duration-300 outline-none"
+              >
+                <option value="">{`Select ${filterType}`}</option>
+                {Array.from(values)
+                  .sort((a, b) => a.localeCompare(b))
+                  .map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+              </select>
+            ))}
         </div>
         <p className="px-1 mb-4 text-gray-500">
           Total : {productVariants.length}
@@ -69,17 +74,27 @@ const Product = () => {
             >
               <div>
                 <p className="text-xl font-semibold">{product.productTitle}</p>
-                <p className="text-base font-semibold text-gray-600">
-                  {Object.entries(product.variant)
-                    .map(
-                      ([filterType, value]) =>
-                        `${
-                          filterType.charAt(0).toUpperCase() +
-                          filterType.slice(1)
-                        }: ${value}`
-                    )
-                    .join(", ")}
+                <p className="text-lg font-semibold text-green-600">
+                  ₹ {product.mrp}/-
                 </p>
+                <div className="text-base font-semibold text-gray-600">
+                  {product.variant &&
+                    Object.entries(product.variant).map(
+                      ([filterType, value]) => (
+                        <p
+                          className={`${
+                            filterType === "color" && "text-cyan-600"
+                          } ${filterType === "size" && "text-amber-500"} ${
+                            filterType === "material" && "text-red-500"
+                          } ${filterType === "style" && "text-fuchsia-700"}`}
+                        >
+                          {filterType.charAt(0).toUpperCase() +
+                            filterType.slice(1)}{" "}
+                          : {value}
+                        </p>
+                      )
+                    )}
+                </div>
               </div>
               <div className="flex justify-between gap-x-2 place-items-center">
                 <button onClick={() => addProductToCart(product, 1)}>

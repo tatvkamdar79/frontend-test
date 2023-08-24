@@ -8,6 +8,9 @@ export default {
         opensans: ["Open Sans", "sans-serif"],
         pts: ["PT Serif", "sans-serif"],
       },
+      screens: {
+        xs: "480px",
+      },
     },
   },
   plugins: [],

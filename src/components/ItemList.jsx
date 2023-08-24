@@ -7,7 +7,7 @@ const ItemList = ({ products }) => {
     console.log("PRODUCT CHANGED FROM ITEM LIST");
   }, [products]);
   return (
-    <div className="w-11/12 h-[77vh] mx-auto overflow-y-scroll">
+    <div className="w-11/12 h-[73vh] mx-auto overflow-y-scroll">
       <ul className="w-full space-y-4">
         {Object.keys(products).map((modelNumber) => {
           let productData = formatProductWithVariantsData(
@@ -66,11 +66,11 @@ const ItemList = ({ products }) => {
                 </div>
                 <p className="font-semibold mr-2">
                   ₹{" "}
-                  <span className="text-green-400">
+                  <span className="text-green-500">
                     {productData?.minPrice}
                   </span>{" "}
                   -{" "}
-                  <span className="text-amber-500">
+                  <span className="text-orange-400">
                     {productData?.maxPrice}
                   </span>
                 </p>

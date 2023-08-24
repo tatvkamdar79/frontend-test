@@ -9,6 +9,7 @@ import Checkout from "./pages/Checkout";
 
 export const UserContext = createContext();
 export const CartContext = createContext();
+export const ViewSideCartContext = createContext();
 
 const App = () => {
   const { checkIsUserAuthenticatedAlready } = useCookies();
@@ -17,6 +18,7 @@ const App = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [viewSideCart, setViewSideCart] = useState(false);
 
   useEffect(() => {
     if (checkIsUserAuthenticatedAlready()) {
@@ -36,31 +38,35 @@ const App = () => {
     <div>
       <UserContext.Provider value={{ user, setUser }}>
         <CartContext.Provider value={{ cart, setCart }}>
-          <Routes>
-            {user && user?.isAuthenticated && user?.isAuthenticated ? (
-              // PLACE ALL PROTECTED ROUTES HERE
-              <>
-                <Route path="/" element={<Dashboard />} />
-                <Route
-                  path="/pos"
-                  element={
-                    <POS
-                      products={products}
-                      setProducts={setProducts}
-                      searchText={searchText}
-                      setSearchText={setSearchText}
-                    />
-                  }
-                />
-                <Route path="/pos/:modelNumber" element={<Product />} />
-                <Route path="/pos/checkout" element={<Checkout />} />
-              </>
-            ) : (
-              <>
-                <Route path="*" element={<Login />} />
-              </>
-            )}
-          </Routes>
+          <ViewSideCartContext.Provider
+            value={{ viewSideCart, setViewSideCart }}
+          >
+            <Routes>
+              {user && user?.isAuthenticated && user?.isAuthenticated ? (
+                // PLACE ALL PROTECTED ROUTES HERE
+                <>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route
+                    path="/pos"
+                    element={
+                      <POS
+                        products={products}
+                        setProducts={setProducts}
+                        searchText={searchText}
+                        setSearchText={setSearchText}
+                      />
+                    }
+                  />
+                  <Route path="/pos/:modelNumber" element={<Product />} />
+                  <Route path="/pos/checkout" element={<Checkout />} />
+                </>
+              ) : (
+                <>
+                  <Route path="*" element={<Login />} />
+                </>
+              )}
+            </Routes>
+          </ViewSideCartContext.Provider>
         </CartContext.Provider>
       </UserContext.Provider>
     </div>
