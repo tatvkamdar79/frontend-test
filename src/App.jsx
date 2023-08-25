@@ -6,6 +6,9 @@ import Dashboard from "./pages/Dashboard";
 import POS from "./pages/POS";
 import Product from "./pages/Product";
 import Checkout from "./pages/Checkout";
+import Inventory from "./pages/Inventory";
+import AddItem from "./pages/AddItem";
+import AddCompany from "./pages/AddCompany";
 
 export const UserContext = createContext();
 export const CartContext = createContext();
@@ -19,7 +22,7 @@ const App = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [viewSideCart, setViewSideCart] = useState(true);
+  const [viewSideCart, setViewSideCart] = useState(false);
   const [globalDiscount, setGlobalDiscount] = useState(0);
 
   useEffect(() => {
@@ -64,6 +67,13 @@ const App = () => {
                     />
                     <Route path="/pos/:modelNumber" element={<Product />} />
                     <Route path="/pos/checkout" element={<Checkout />} />
+
+                    <Route path="/inventory" element={<Inventory />} />
+                    <Route path="/inventory/add-item" element={<AddItem />} />
+                    <Route
+                      path="/inventory/add-company"
+                      element={<AddCompany />}
+                    />
                   </>
                 ) : (
                   <>

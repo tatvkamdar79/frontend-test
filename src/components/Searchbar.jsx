@@ -46,7 +46,7 @@ const Searchbar = ({ setProducts, searchText, setSearchText, setLoading }) => {
   };
 
   return (
-    <div className="w-5/6 mx-auto p-5 pb-0">
+    <div>
       <input
         type="text"
         placeholder="Search here..."
@@ -60,7 +60,7 @@ const Searchbar = ({ setProducts, searchText, setSearchText, setLoading }) => {
             <li key={index}>* {e}</li>
           ))}
         </ul>
-        <div className="flex gap-x-1">
+        <div className="absolute flex gap-x-1">
           {executionTime && (
             <p className="text-gray-500 text-sm">
               Fetched in {executionTime} s{productCount && ","}
