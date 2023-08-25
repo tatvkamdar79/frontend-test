@@ -20,7 +20,7 @@ const App = () => {
   const [cart, setCart] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [viewSideCart, setViewSideCart] = useState(true);
-  const [globalDiscount, setGlobalDiscount] = useState(null);
+  const [globalDiscount, setGlobalDiscount] = useState(0);
 
   useEffect(() => {
     if (checkIsUserAuthenticatedAlready()) {

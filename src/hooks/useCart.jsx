@@ -25,10 +25,7 @@ export default function useCart() {
   }, [cart]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "globalDiscount",
-      JSON.stringify({ globalDiscount: globalDiscount })
-    );
+    localStorage.setItem("globalDiscount", globalDiscount);
     console.log(globalDiscount);
   }, [globalDiscount]);
 
@@ -118,21 +115,27 @@ export default function useCart() {
     return cartItem.product.mrp * cartItem.quantity;
   };
 
+  const showOriginalPriceForItem = (product) => {
+    const cartItem = cart.find((p) => p.product._id === product._id);
+    return cartItem.product.mrp * cartItem.quantity;
+  };
+
   const applyGlobalDiscountToCart = (globalDiscount) => {};
 
-  const getTotalPriceForCart = () => {
+  const getTotalPriceForCart = (taxRate = 0) => {
     let totalPrice = 0;
     cart.forEach((item) => {
       let finalPriceForProduct = showFinalPriceForItem(item.product);
-      if (item.discount && item.discount > 0) {
-        totalPrice += finalPriceForProduct;
-      } else if (globalDiscount) {
-        totalPrice += finalPriceForProduct * (1 - globalDiscount / 100);
-      } else {
-        totalPrice += finalPriceForProduct;
-      }
+      totalPrice += finalPriceForProduct;
     });
-    return totalPrice;
+    if (globalDiscount) {
+      totalPrice = totalPrice * (1 - globalDiscount / 100);
+    }
+    if (taxRate) {
+      totalPrice +=
+        totalPrice * (parseFloat(taxRate) ? parseFloat(taxRate) / 100 : 0);
+    }
+    return totalPrice.toFixed(2);
   };
 
   const clearCart = () => {
@@ -145,6 +148,7 @@ export default function useCart() {
     getItemQuantityFromCart,
     applyDiscountToItem,
     showFinalPriceForItem,
+    showOriginalPriceForItem,
     applyGlobalDiscountToCart,
     getTotalPriceForCart,
     clearCart,

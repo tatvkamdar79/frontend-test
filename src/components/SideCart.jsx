@@ -22,6 +22,7 @@ const SideCart = () => {
     removeProductFromCart,
     applyDiscountToItem,
     showFinalPriceForItem,
+    showOriginalPriceForItem,
     applyGlobalDiscountToCart,
     getTotalPriceForCart,
     clearCart,
@@ -83,9 +84,23 @@ const SideCart = () => {
                   </p>
                   <p>{getVariantDetails(product)}</p>
                   <p className="text-gray-600">Quantity: {quantity}</p>
-                  <p className="flex place-items-center text-xl text-green-600">
+                  <p className="flex place-items-center text-xl text-gray-600">
                     <BsCurrencyRupee size={20} />
-                    {showFinalPriceForItem(product)}
+                    {showFinalPriceForItem(product) <
+                    showOriginalPriceForItem(product) ? (
+                      <p className="flex gap-x-2">
+                        <s className="text-red-400 -rotate-12 decoration-1">
+                          {showOriginalPriceForItem(product)}
+                        </s>
+                        <span className="font-semibold">
+                          {showFinalPriceForItem(product)}
+                        </span>
+                      </p>
+                    ) : (
+                      <p className="font-semibold">
+                        {showFinalPriceForItem(product)}
+                      </p>
+                    )}
                     {/* {product.mrp * quantity} */}
                   </p>
                   <p className="flex place-items-center text-xl text-red-600">
@@ -182,7 +197,32 @@ const SideCart = () => {
             <BsCurrencyRupee size={20} /> <span>{getTotalPriceForCart()}</span>
           </p>
         </div>
+        <div className="w-full place-items-center gap-x-2">
+          <div className="flex place-items-center justify-between">
+            <p className="text-sm font-semibold text-gray-500">+ SGST (9%)</p>
+            <p className="flex text-sm font-semibold text-gray-500">
+              <BsCurrencyRupee size={20} />{" "}
+              <span>{getTotalPriceForCart(9)}</span>
+            </p>
+          </div>
+          <div className="flex place-items-center justify-between">
+            <p className="text-sm font-semibold text-gray-500">+ CGST (9%)</p>
+            <p className="flex text-sm font-semibold text-gray-500">
+              <BsCurrencyRupee size={20} />{" "}
+              <span>{getTotalPriceForCart(9)}</span>
+            </p>
+          </div>
+        </div>
         <div className="h-0.5 w-full bg-gray-300 my-2" />
+        <div className="h-0.5 w-full bg-gray-300 my-3" />
+        <div className="w-full flex justify-between place-items-center gap-x-2">
+          <p className="text-xl font-semibold text-gray-500">Final Price</p>
+          <p className="flex place-items-center text-xl font-semibold text-gray-600">
+            <BsCurrencyRupee size={20} />{" "}
+            <span>{getTotalPriceForCart(18)}</span>
+          </p>
+        </div>
+
         <div className="flex justify-between mt-6">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
