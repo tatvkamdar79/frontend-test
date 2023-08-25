@@ -106,7 +106,7 @@ export default function useCart() {
   };
 
   const showFinalPriceForItem = (product) => {
-    const cartItem = cart.find((p) => p.product._id === product._id);
+    const cartItem = cart.find((item) => item.product._id === product._id);
     if (cartItem.discount) {
       return (
         cartItem.product.mrp * (1 - cartItem.discount / 100) * cartItem.quantity

@@ -1,6 +1,7 @@
 // CompanyModal.js
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { deleteCompany, updateCompanyName } from "../utils/companyUtils";
 
 const CompanyModal = ({ company, onClose, onDelete, onEdit }) => {
   const [editedCompanyName, setEditedCompanyName] = useState(
@@ -12,9 +13,21 @@ const CompanyModal = ({ company, onClose, onDelete, onEdit }) => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
-    onEdit(company._id, editedCompanyName); // Pass edited values to parent component
+  const handleSave = async () => {
+    const response = await updateCompanyName({
+      ...company,
+      companyName: editedCompanyName,
+    });
+    // console.log(response);
     setIsEditing(false);
+    onEdit();
+  };
+
+  const handleDelete = async () => {
+    const response = await deleteCompany(company);
+    // console.log(response);
+    setIsEditing(false);
+    onDelete();
   };
 
   return (
@@ -26,7 +39,7 @@ const CompanyModal = ({ company, onClose, onDelete, onEdit }) => {
               {company.companyName}
             </h2>
             <div className="mb-4">
-              <label className="block font-medium">Company ID</label>
+              <label className="block font-medium">_id</label>
               <input
                 type="text"
                 value={company._id}
@@ -80,7 +93,7 @@ const CompanyModal = ({ company, onClose, onDelete, onEdit }) => {
                 </button>
               )}
               <button
-                onClick={onDelete}
+                onClick={handleDelete}
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
               >
                 Delete

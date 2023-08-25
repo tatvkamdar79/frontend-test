@@ -11,15 +11,18 @@ const AddCompany = () => {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    async function fetchCompanies() {
-      try {
-        const response = await axios.get(baseUrl + "/company/getAllCompanies");
-        setExistingCompanies(response.data.data);
-      } catch (error) {
-        console.error("Error fetching companies:", error);
-      }
+  async function fetchCompanies() {
+    try {
+      const response = await axios.get(baseUrl + "/company/getAllCompanies");
+      const companies = response.data.data;
+      companies.sort((a, b) => a.companyName.localeCompare(b.companyName));
+      setExistingCompanies(companies);
+    } catch (error) {
+      console.error("Error fetching companies:", error);
     }
+  }
+
+  useEffect(() => {
     fetchCompanies();
   }, []);
 
@@ -34,7 +37,13 @@ const AddCompany = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (
+      !window.confirm(
+        `Are you sure you want to create a company with name ${companyName}?`
+      )
+    ) {
+      return;
+    }
     try {
       const response = await axios.post(baseUrl + "/company/addCompany", {
         companyName:
@@ -53,9 +62,10 @@ const AddCompany = () => {
     setShowModal(true);
   };
 
-  const closeModal = () => {
+  const closeModal = async () => {
     setSelectedCompany(null);
     setShowModal(false);
+    await fetchCompanies();
   };
 
   return (
@@ -101,19 +111,9 @@ const AddCompany = () => {
       {showModal && (
         <CompanyModal
           company={selectedCompany}
-          onClose={closeModal}
-          onDelete={() => {
-            // Handle deletion here
-            // You need to implement the deleteCompany function using Axios
-            // and update the existingCompanies state after deletion
-            closeModal();
-          }}
-          onEdit={() => {
-            // Handle editing here
-            // You need to implement the editCompany function using Axios
-            // and update the existingCompanies state after editing
-            closeModal();
-          }}
+          onClose={() => closeModal()}
+          onDelete={() => closeModal()}
+          onEdit={() => closeModal()}
         />
       )}
     </div>
