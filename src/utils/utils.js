@@ -1,7 +1,5 @@
 import axios from "axios";
-import { baseUrl } from "./constants";
-
-const productAPI = "/product";
+import { baseUrl, productAPI } from "./constants";
 
 export const search = async (searchQuery) => {
   searchQuery = searchQuery.trim();

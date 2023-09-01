@@ -105,7 +105,7 @@ const Product = () => {
                   <button onClick={() => addProductToCart(product, 1)}>
                     <FaPlus
                       size={25}
-                      className="text-green-500 hover:text-green-600 transition-all"
+                      className="text-gray-500 hover:text-gray-600 transition-all"
                     />
                   </button>
                   <input
@@ -123,7 +123,7 @@ const Product = () => {
                   <button onClick={() => removeProductFromCart(product, 1)}>
                     <FaMinus
                       size={25}
-                      className="text-red-400 hover:text-red-600 transition-all"
+                      className="text-gray-500 hover:text-gray-600 transition-all"
                     />
                   </button>
                 </div>

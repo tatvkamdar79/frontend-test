@@ -1,3 +1,6 @@
+import axios from "axios";
+import { baseUrl, productAPI } from "./constants";
+
 export const formatProductWithVariantsData = (products, modelNumber) => {
   let productWithVariants = products[modelNumber];
   let productTitle = productWithVariants[0].productTitle;
@@ -57,4 +60,52 @@ export const formatProductWithVariantsData = (products, modelNumber) => {
     colors,
     styles,
   };
+};
+
+const makeTags = (product) => {
+  const fieldsToCheck = [
+    "modelNumber",
+    "company",
+    "productTitle",
+    "productType",
+    "productCategory",
+    "additionalIdentifier",
+    "description",
+  ];
+
+  const tags = [];
+
+  fieldsToCheck.forEach((fieldName) => {
+    const fieldValue = product[fieldName];
+    if (fieldValue && fieldValue.trim() !== "") {
+      tags.push(fieldValue);
+    }
+  });
+
+  return tags;
+};
+
+export const addProduct = async (product, variants) => {
+  let allProducts = [];
+  for (let variant of variants) {
+    let productVariant = { ...product };
+    let { mrp, cost, ...currenVariant } = variant;
+    productVariant["mrp"] = mrp;
+    productVariant["cost"] = cost;
+    productVariant["variant"] = currenVariant;
+    productVariant["tags"] = makeTags(product);
+    delete productVariant["variants"];
+    allProducts.push(productVariant);
+  }
+
+  console.log(allProducts);
+  const url = `${baseUrl}${productAPI}/addProduct`;
+  try {
+    const response = await axios.post(url, allProducts);
+    console.log("response", response);
+    return response.data;
+  } catch (error) {
+    alert(error.response.data.message);
+    return error;
+  }
 };

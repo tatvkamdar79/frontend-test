@@ -7,7 +7,7 @@ import POS from "./pages/POS";
 import Product from "./pages/Product";
 import Checkout from "./pages/Checkout";
 import Inventory from "./pages/Inventory";
-import AddItem from "./pages/AddItem";
+import Items from "./pages/Items";
 import AddCompany from "./pages/AddCompany";
 
 export const UserContext = createContext();
@@ -69,7 +69,7 @@ const App = () => {
                     <Route path="/pos/checkout" element={<Checkout />} />
 
                     <Route path="/inventory" element={<Inventory />} />
-                    <Route path="/inventory/add-item" element={<AddItem />} />
+                    <Route path="/inventory/items" element={<Items />} />
                     <Route
                       path="/inventory/add-company"
                       element={<AddCompany />}

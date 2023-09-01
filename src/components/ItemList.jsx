@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 const ItemList = ({ products }) => {
   useEffect(() => {
     console.log("PRODUCT CHANGED FROM ITEM LIST");
+    console.log(products);
   }, [products]);
   return (
     <div className="w-11/12 h-[73vh] mx-auto overflow-y-scroll">
