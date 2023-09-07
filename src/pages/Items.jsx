@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import AddItemModal from "../components/AddItemModal";
 
 const Items = () => {
@@ -31,9 +32,9 @@ const Items = () => {
         }`}
       >
         <p className="text-2xl font-semibold text-gray-700 underline mb-4">
-          {Object.keys(draftItems).length === 0
-            ? "You Have No Drafts"
-            : "Draft Items"}
+          {draftItems && Object.keys(draftItems).length !== 0
+            ? "Draft Items"
+            : "You Have No Drafts"}
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 place-items-center gap-x-5 gap-y-10">
           {draftItems &&
@@ -86,21 +87,26 @@ const Items = () => {
 export default Items;
 
 const SideBar = ({ setOpenAddItemModal }) => {
+  const navigate = useNavigate();
   return (
-    <div className="h-full w-full bg-gray-300 flex flex-col justify-start p-6">
+    <div className="h-full w-full bg-gray-200 flex flex-col justify-start p-6">
       <p className="flex justify-between place-items-center text-2xl text-gray-600 font-semibold underline mb-10">
         Sidebar
       </p>
       <ul className="text-base text-gray-700 space-y-2">
-        <button
-          onClick={() => setOpenAddItemModal(true)}
-          className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer"
-        >
-          Add Item
-        </button>
-        <button className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
-          Manage Items
-        </button>
+        <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
+          <button onClick={() => setOpenAddItemModal(true)} className="w-full">
+            Add Item
+          </button>
+        </div>
+        <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
+          <button
+            onClick={() => navigate("/inventory/items/manage")}
+            className="w-full"
+          >
+            Manage Items
+          </button>
+        </div>
       </ul>
     </div>
   );

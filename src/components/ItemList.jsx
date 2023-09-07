@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { formatProductWithVariantsData } from "../utils/productUtils";
 import { Link } from "react-router-dom";
 
-const ItemList = ({ products }) => {
+const ItemList = ({ products, manage = false }) => {
   useEffect(() => {
     console.log("PRODUCT CHANGED FROM ITEM LIST");
     console.log(products);
@@ -22,7 +22,9 @@ const ItemList = ({ products }) => {
               className="p-4 bg-gray-100 rounded-md shadow-lg cursor-pointer hover:shadow-sm transition-all duration-200"
             >
               <Link
-                to={`/pos/${modelNumber}`}
+                to={`${
+                  manage ? "/inventory/items/manage" : "/pos"
+                }/${modelNumber}`}
                 state={{ productVariants: products[modelNumber] }}
                 className="flex flex-col md:flex-row md:justify-between md:place-items-center text-lg"
               >

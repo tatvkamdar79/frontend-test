@@ -9,6 +9,8 @@ import Checkout from "./pages/Checkout";
 import Inventory from "./pages/Inventory";
 import Items from "./pages/Items";
 import AddCompany from "./pages/AddCompany";
+import ManageProducts from "./pages/ManageProducts";
+import ProductDetails from "./pages/ProductDetails";
 
 export const UserContext = createContext();
 export const CartContext = createContext();
@@ -70,6 +72,28 @@ const App = () => {
 
                     <Route path="/inventory" element={<Inventory />} />
                     <Route path="/inventory/items" element={<Items />} />
+                    <Route
+                      path="/inventory/items/manage"
+                      element={
+                        <ManageProducts
+                          products={products}
+                          setProducts={setProducts}
+                          searchText={searchText}
+                          setSearchText={setSearchText}
+                        />
+                      }
+                    />
+                    <Route
+                      path="/inventory/items/manage/:modelNumber"
+                      element={
+                        <ProductDetails
+                          products={products}
+                          setProducts={setProducts}
+                          searchText={searchText}
+                          setSearchText={setSearchText}
+                        />
+                      }
+                    />
                     <Route
                       path="/inventory/add-company"
                       element={<AddCompany />}

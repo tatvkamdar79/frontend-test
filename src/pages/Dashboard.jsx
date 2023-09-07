@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   return (
-    <div className="w-full min-h-screen bg-gray-300 flex justify-center items-center">
+    <div className="w-full min-h-screen bg-gray-200 flex justify-center items-center">
       <div className="w-2/3 grid md:grid-cols-2 gap-6">
         <Link
           to={"/pos"}
