@@ -1,12 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AddItemModal from "../components/AddItemModal";
+import { AiOutlineDelete } from "react-icons/ai";
+import { MdDelete } from "react-icons/md";
+import { getFullProductsDatabaseCSV } from "../utils/adminUtils";
+import BulkFileUpload from "../components/BulkFileUpload";
+
+const DRAFT = "DRAFT";
+const BULK_FILE_UPLOAD = "BULK_FILE_UPLOAD";
 
 const Items = () => {
   const [draftItems, setDraftItems] = useState({});
   const [openAddItemModal, setOpenAddItemModal] = useState(false);
   const [draftDetails, setDraftDetails] = useState(null);
   const [selectedDraftName, setSelectedDraftName] = useState(null);
+  const [view, setView] = useState(DRAFT);
+
+  const deleteDraft = (draftName) => {
+    let tempDraftItems = localStorage.getItem("draftItems");
+    if (!tempDraftItems) {
+      return;
+    }
+    const drafts = JSON.parse(tempDraftItems);
+    if (drafts.hasOwnProperty(draftName)) {
+      delete drafts[draftName];
+    }
+    setDraftItems(drafts);
+    localStorage.setItem("draftItems", JSON.stringify(drafts));
+  };
 
   useEffect(() => {
     if (localStorage.getItem("draftItems") === undefined) {
@@ -24,42 +45,57 @@ const Items = () => {
   return (
     <div className="w-full h-screen flex justify-start">
       <section className="w-[25%] xl:w-[15%]">
-        <SideBar setOpenAddItemModal={setOpenAddItemModal} />
+        <SideBar setOpenAddItemModal={setOpenAddItemModal} setView={setView} />
       </section>
-      <section
-        className={`w-[75%] xl:w-[85%] bg-gray-200 p-5 ${
-          openAddItemModal && "blur-[1.5px]"
-        }`}
-      >
-        <p className="text-2xl font-semibold text-gray-700 underline mb-4">
-          {draftItems && Object.keys(draftItems).length !== 0
-            ? "Draft Items"
-            : "You Have No Drafts"}
-        </p>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 place-items-center gap-x-5 gap-y-10">
-          {draftItems &&
-            Object.keys(draftItems).map((draftName, index) => (
-              <div
-                key={index}
-                onClick={() => {
-                  let newDraftItem = { ...draftItems };
-                  setDraftDetails(newDraftItem[draftName]);
-                  setOpenAddItemModal(true);
-                  setSelectedDraftName(draftName);
-                }}
-              >
-                <DraftCard
-                  setOpenAddItemModal={setOpenAddItemModal}
-                  draftName={draftName}
-                  draft={draftItems[draftName]}
-                  draftDetails={draftDetails}
-                  setDraftDetails={setDraftDetails}
-                  setSelectedDraftName={setSelectedDraftName}
-                />
-              </div>
-            ))}
-        </div>
-      </section>
+      {view === BULK_FILE_UPLOAD && (
+        <section className="w-[75%] xl:w-[85%] p-5">
+          <BulkFileUpload />
+        </section>
+      )}
+      {view === DRAFT && (
+        <section
+          className={`w-[75%] xl:w-[85%] p-5 ${
+            openAddItemModal && "blur-[1.5px]"
+          }`}
+        >
+          <p className="text-2xl font-semibold text-gray-700 underline mb-4">
+            {draftItems && Object.keys(draftItems).length !== 0
+              ? "Draft Items"
+              : "You Have No Drafts"}
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 place-items-center gap-x-5 gap-y-10">
+            {draftItems &&
+              Object.keys(draftItems).map((draftName, index) => (
+                <div>
+                  <div
+                    key={index}
+                    onClick={() => {
+                      let newDraftItem = { ...draftItems };
+                      setDraftDetails(newDraftItem[draftName]);
+                      setOpenAddItemModal(true);
+                      setSelectedDraftName(draftName);
+                    }}
+                  >
+                    <DraftCard
+                      setOpenAddItemModal={setOpenAddItemModal}
+                      draftName={draftName}
+                      draft={draftItems[draftName]}
+                      draftDetails={draftDetails}
+                      setDraftDetails={setDraftDetails}
+                      setSelectedDraftName={setSelectedDraftName}
+                    />
+                  </div>
+                  <button onClick={() => deleteDraft(draftName)}>
+                    <MdDelete
+                      size={40}
+                      className="text-red-500 hover:scale-125 transition-all"
+                    />
+                  </button>
+                </div>
+              ))}
+          </div>
+        </section>
+      )}
 
       <section
         className={`${
@@ -86,7 +122,7 @@ const Items = () => {
 
 export default Items;
 
-const SideBar = ({ setOpenAddItemModal }) => {
+const SideBar = ({ setOpenAddItemModal, setView }) => {
   const navigate = useNavigate();
   return (
     <div className="h-full w-full bg-gray-200 flex flex-col justify-start p-6">
@@ -107,18 +143,32 @@ const SideBar = ({ setOpenAddItemModal }) => {
             Manage Items
           </button>
         </div>
+        <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
+          <button
+            onClick={() => {
+              setView(BULK_FILE_UPLOAD);
+            }}
+            className="w-full"
+          >
+            Bulk Upload
+          </button>
+        </div>
+        <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
+          <button
+            onClick={async () => {
+              const res = await getFullProductsDatabaseCSV();
+            }}
+            className="w-full"
+          >
+            Download Full Database Excel
+          </button>
+        </div>
       </ul>
     </div>
   );
 };
 
-const DraftCard = ({
-  setOpenAddItemModal,
-  draftName,
-  draft,
-  setDraftDetails,
-  setSelectedDraftName,
-}) => {
+const DraftCard = ({ draftName, draft }) => {
   return (
     <div className="w-64 h-40 flex flex-col justify-center border-2 border-gray-400 rounded-md p-3 bg-orange-200 shadow-xl shadow-gray-300 hover:scale-105 hover:bg-green-200 transition-all duration-200 cursor-pointer">
       <p className="text-gray-800 font-semibold underline">{draftName}</p>
