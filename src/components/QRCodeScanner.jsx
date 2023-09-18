@@ -104,7 +104,7 @@ const QRCodeScanner = ({
 
   useEffect(() => {
     if (openQRCodeScanner) {
-      const interval = setInterval(captureImage, 750); // Capture image every 1 second
+      const interval = setInterval(captureImage, 750); // Capture image every 0.75 second
 
       return () => {
         clearInterval(interval);

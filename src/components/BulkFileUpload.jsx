@@ -1,16 +1,35 @@
 import React, { useState } from "react";
+import Papa from "papaparse"; // Import papaparse library
 import { updateProductsDatabaseFromCSV } from "../utils/adminUtils";
 
 const BulkFileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    console.log(file);
     setSelectedFile(file);
   };
 
   const handleUpload = async () => {
-    const response = await updateProductsDatabaseFromCSV(selectedFile);
+    if (!selectedFile) {
+      console.error("No file selected.");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+      const csv = e.target.result;
+      const parsedData = Papa.parse(csv, { header: true }); // Parse the CSV
+
+      // parsedData.data will contain an array of JSON objects
+      console.log(parsedData.data);
+
+      // Now, you can use parsedData.data as JSON objects and pass it to your function.
+      await updateProductsDatabaseFromCSV(parsedData.data);
+    };
+
+    reader.readAsText(selectedFile);
   };
 
   return (

@@ -22,17 +22,13 @@ export const getFullProductsDatabaseCSV = async () => {
   }
 };
 
-export const updateProductsDatabaseFromCSV = async (file) => {
-  if (!file) return;
-  console.log(file);
-  const formData = new FormData();
-  formData.append("csvFile", file);
+export const updateProductsDatabaseFromCSV = async (parsedJSONFromCSV) => {
+  if (!parsedJSONFromCSV) return;
+  console.log(parsedJSONFromCSV);
   const url = `${baseUrl}${adminAPI}/updateProductsDatabaseCSV`;
 
   try {
-    const response = await axios.post(url, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const response = await axios.post(url, parsedJSONFromCSV);
     console.log("File uploaded successfully", response);
   } catch (error) {
     console.error("Error uploading file", error);

@@ -70,7 +70,7 @@ const Product = () => {
             Total : {productVariants.length}
           </p>
           <ul className="h-full space-y-4 overflow-y-scroll">
-            {filteredProducts.map((product) => (
+            {filteredProducts.map((product, index) => (
               <li
                 key={product._id}
                 className="flex flex-col md:flex-row md:justify-between md:place-items-center p-4 border rounded-md shadow-md bg-white"
@@ -85,8 +85,9 @@ const Product = () => {
                   <div className="text-base text-gray-600">
                     {product.variant &&
                       Object.entries(product.variant).map(
-                        ([filterType, value]) => (
+                        ([filterType, value], index) => (
                           <p
+                            key={index}
                             className={`${
                               filterType === "color" && "text-gray-600"
                             } ${filterType === "size" && "text-gray-600"} ${

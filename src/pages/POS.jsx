@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Searchbar from "../components/Searchbar";
 import QRCodeScanner from "../components/QRCodeScanner";
 import ItemList from "../components/ItemList";
@@ -8,15 +8,30 @@ import { Link } from "react-router-dom";
 import { BsQrCodeScan } from "react-icons/bs";
 import { IoBagCheckOutline } from "react-icons/io5";
 import SideCart from "../components/SideCart";
-import { ViewSideCartContext } from "../App";
+import { BreadCrumbsContext, ViewSideCartContext } from "../App";
 
 const POS = ({ products, setProducts, searchText, setSearchText }) => {
+  const { path, setPath } = useContext(BreadCrumbsContext);
   const [openQRCodeScanner, setOpenQRCodeScanner] = useState(false);
   const [loading, setLoading] = useState(false);
   const { viewSideCart, setViewSideCart } = useContext(ViewSideCartContext);
 
+  useEffect(() => {
+    const currentPath = [...path];
+    currentPath.push({
+      page: "POS",
+      history: ["base", "POS"],
+      element: <Link to={"/pos"}>POS</Link>,
+    });
+    setPath(currentPath);
+    return () => {
+      const leavingPath = [...path];
+      leavingPath.filter((pages) => pages.page !== "POS");
+      setPath(leavingPath);
+    };
+  }, []);
   return (
-    <div className="w-screen h-screen bg-gray-100 p-6 overflow-y-scroll overflow-x-hidden">
+    <div className="w-screen h-[94vh] p-4 bg-gray-100 overflow-y-scroll overflow-x-hidden">
       <div className="w-full md:max-w-screen-2xl mx-auto">
         <div className="bg-white p-6 rounded-lg shadow-md">
           <section className="w-[92%] mx-auto flex place-items-center gap-x-2 p-2">
@@ -70,6 +85,7 @@ const POS = ({ products, setProducts, searchText, setSearchText }) => {
               <Loader />
             </div>
           )}
+
           <ItemList products={products} />
         </div>
       </div>

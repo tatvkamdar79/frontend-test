@@ -21,12 +21,12 @@ export default function useCart() {
   useEffect(() => {
     // Save cart data to localStorage whenever cart changes
     localStorage.setItem("cart", JSON.stringify(cart));
-    console.log(cart);
+    // console.log (cart);
   }, [cart]);
 
   useEffect(() => {
     localStorage.setItem("globalDiscount", globalDiscount);
-    console.log(globalDiscount);
+    // console.log(globalDiscount);
   }, [globalDiscount]);
 
   const addProductToCart = (product, quantity, manualEntry = false) => {

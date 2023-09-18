@@ -11,8 +11,6 @@ const ProductDetails = () => {
   const [showQRCode, setShowQRCode] = useState(false);
   const [downloadedImageSrc, setDownloadedImageSrc] = useState("");
 
-  const qrCodeRef = useRef(null);
-
   const toggleQRCode = () => {
     setShowQRCode((prevState) => !prevState);
   };
@@ -127,10 +125,9 @@ const ProductDetails = () => {
             <h2 className="text-xl font-bold mb-2">Draft QR Code</h2>
             <QRCode
               id="qr"
-              ref={qrCodeRef}
               size={200}
               fgColor="#003140"
-              value={commonData.modelNumber}
+              value={`${commonData.company}|${commonData.modelNumber}`}
               level="L"
               className="border-2 border-white p-5 rounded-md bg-white"
             />

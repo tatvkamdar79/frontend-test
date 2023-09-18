@@ -5,16 +5,18 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
 import { getFullProductsDatabaseCSV } from "../utils/adminUtils";
 import BulkFileUpload from "../components/BulkFileUpload";
+import BulkGenerateQR from "../components/BulkGenerateQR";
 
 const DRAFT = "DRAFT";
 const BULK_FILE_UPLOAD = "BULK_FILE_UPLOAD";
+const BULK_GENERATE_QR = "BULK_GENERATE_QR";
 
 const Items = () => {
   const [draftItems, setDraftItems] = useState({});
   const [openAddItemModal, setOpenAddItemModal] = useState(false);
   const [draftDetails, setDraftDetails] = useState(null);
   const [selectedDraftName, setSelectedDraftName] = useState(null);
-  const [view, setView] = useState(DRAFT);
+  const [view, setView] = useState(BULK_GENERATE_QR);
 
   const deleteDraft = (draftName) => {
     let tempDraftItems = localStorage.getItem("draftItems");
@@ -43,7 +45,7 @@ const Items = () => {
   }, []);
 
   return (
-    <div className="w-full h-screen flex justify-start">
+    <div className="w-full h-[94vh] flex justify-start">
       <section className="w-[25%] xl:w-[15%]">
         <SideBar setOpenAddItemModal={setOpenAddItemModal} setView={setView} />
       </section>
@@ -52,6 +54,7 @@ const Items = () => {
           <BulkFileUpload />
         </section>
       )}
+      {view === BULK_GENERATE_QR && <BulkGenerateQR />}
       {view === DRAFT && (
         <section
           className={`w-[75%] xl:w-[85%] p-5 ${
@@ -161,6 +164,11 @@ const SideBar = ({ setOpenAddItemModal, setView }) => {
             className="w-full"
           >
             Download Full Database Excel
+          </button>
+        </div>
+        <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
+          <button onClick={() => setView(BULK_GENERATE_QR)} className="w-full">
+            Bulk Generate QR
           </button>
         </div>
       </ul>

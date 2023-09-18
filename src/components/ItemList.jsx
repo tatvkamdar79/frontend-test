@@ -8,18 +8,19 @@ const ItemList = ({ products, manage = false }) => {
     console.log(products);
   }, [products]);
   return (
-    <div className="w-11/12 h-[73vh] mx-auto overflow-y-scroll">
+    <div className="w-11/12 h-[68vh] mx-auto overflow-y-scroll">
       <ul className="w-full space-y-4">
-        {Object.keys(products).map((modelNumber) => {
+        {Object.keys(products).map((modelNumber, index) => {
           let productData = formatProductWithVariantsData(
             products,
             modelNumber
           );
+          console.log(index);
 
           return (
             <li
-              key={modelNumber}
-              className="p-4 bg-gray-100 rounded-md shadow-lg cursor-pointer hover:shadow-sm transition-all duration-200"
+              key={index}
+              className="p-4 bg-gray-100 rounded-md shadow-lg cursor-pointer hover:shadow-sm transition-all"
             >
               <Link
                 to={`${
