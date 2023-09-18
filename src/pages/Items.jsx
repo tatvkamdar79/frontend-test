@@ -27,7 +27,7 @@ const Items = () => {
         <SideBar setOpenAddItemModal={setOpenAddItemModal} />
       </section>
       <section
-        className={`w-[75%] xl:w-[85%] bg-gray-200 p-5 ${
+        className={`w-[75%] xl:w-[85%] bg-gray-50 p-5 ${
           openAddItemModal && "blur-[1.5px]"
         }`}
       >

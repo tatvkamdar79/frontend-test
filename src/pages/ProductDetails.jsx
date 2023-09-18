@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import QRCode from "qrcode.react";
 
 const ProductDetails = () => {
   const { state } = useLocation();
@@ -7,8 +8,52 @@ const ProductDetails = () => {
 
   const [formData, setFormData] = useState(productVariants);
   const [isEditing, setIsEditing] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
+  const [downloadedImageSrc, setDownloadedImageSrc] = useState("");
 
-  // Extracting common data from the first variant
+  const qrCodeRef = useRef(null);
+
+  const toggleQRCode = () => {
+    setShowQRCode((prevState) => !prevState);
+  };
+
+  const convertQRCodeToImage = () => {
+    const qrCodeElement = document.getElementById("qr");
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    // Set canvas dimensions with extra padding
+    const padding = 20; // Adjust this value for desired padding
+    canvas.width = qrCodeElement.width + 2 * padding; // Twice the padding for both sides
+    canvas.height = qrCodeElement.height + 2 * padding;
+
+    // Apply styles (padding and rounded borders)
+    context.fillStyle = "#ffffff"; // Set background color
+    context.fillRect(0, 0, canvas.width, canvas.height); // Fill canvas with background color
+    context.drawImage(qrCodeElement, padding, padding); // Draw QR code with padding
+
+    const imageSrc = canvas.toDataURL();
+
+    setDownloadedImageSrc(imageSrc);
+  };
+
+  const downloadImage = () => {
+    const img = document.getElementById("downloadedImage");
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    ctx.drawImage(img, 0, 0);
+
+    const dataURL = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = dataURL;
+    a.download = `QR_${commonData.modelNumber}.png`;
+    a.click();
+  };
+
   const commonData = formData[0] ? formData[0] : null;
 
   const handleChange = (index, key, value) => {
@@ -38,20 +83,83 @@ const ProductDetails = () => {
 
       <div className="mb-4">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition-all"
           onClick={() => setIsEditing(!isEditing)}
         >
           {isEditing ? "Disable Editing" : "Enable Editing"}
         </button>
       </div>
 
-      {/* Display and edit common data */}
+      <div className="flex space-x-4 mb-4">
+        <button
+          className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded transition-all"
+          onClick={toggleQRCode}
+        >
+          Generate QR Code
+        </button>
+
+        {showQRCode && commonData && (
+          <button
+            className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded transition-all"
+            onClick={convertQRCodeToImage}
+          >
+            Convert to Image
+          </button>
+        )}
+
+        {showQRCode && downloadedImageSrc && (
+          <button
+            className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition-all"
+            onClick={downloadImage}
+          >
+            Download Image
+          </button>
+        )}
+      </div>
+
+      <div
+        className={`w-fit p-5 flex ${
+          showQRCode ? "h-96" : "h-0"
+        } gap-x-10 transition-all duration-300`}
+      >
+        {showQRCode && showQRCode && commonData && (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-2">Draft QR Code</h2>
+            <QRCode
+              id="qr"
+              ref={qrCodeRef}
+              size={200}
+              fgColor="#003140"
+              value={commonData.modelNumber}
+              level="L"
+              className="border-2 border-white p-5 rounded-md bg-white"
+            />
+          </div>
+        )}
+
+        {showQRCode && downloadedImageSrc && (
+          <div>
+            <h2 className="text-xl font-bold mb-2">Final QR Image</h2>
+            <div
+              id="imageContainer"
+              className="w-fit h-fit p-4 bg-white rounded-md"
+            >
+              <img
+                id="downloadedImage"
+                alt="Downloaded QR Code"
+                src={downloadedImageSrc}
+                className="rounded-md border-2 border-gray-600"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
       {commonData && <h2 className="text-xl font-bold mb-2">Common Data</h2>}
       {commonData && (
         <div className="mb-8 grid grid-cols-3 gap-x-6">
           {Object.entries(commonData).map(([key, value]) => {
-            if (key === "variant") return;
-            if (key === "_id") return;
+            if (key === "variant" || key === "_id") return null;
             return (
               <div key={key} className="mb-4">
                 <label className="block text-gray-700 font-bold mb-2 capitalize">
