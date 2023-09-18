@@ -96,40 +96,6 @@ const Items = () => {
           </div>
         </section>
       )}
-      <section
-        className={`w-[75%] xl:w-[85%] bg-gray-50 p-5 ${
-          openAddItemModal && "blur-[1.5px]"
-        }`}
-      >
-        <p className="text-2xl font-semibold text-gray-700 underline mb-4">
-          {draftItems && Object.keys(draftItems).length !== 0
-            ? "Draft Items"
-            : "You Have No Drafts"}
-        </p>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 place-items-center gap-x-5 gap-y-10">
-          {draftItems &&
-            Object.keys(draftItems).map((draftName, index) => (
-              <div
-                key={index}
-                onClick={() => {
-                  let newDraftItem = { ...draftItems };
-                  setDraftDetails(newDraftItem[draftName]);
-                  setOpenAddItemModal(true);
-                  setSelectedDraftName(draftName);
-                }}
-              >
-                <DraftCard
-                  setOpenAddItemModal={setOpenAddItemModal}
-                  draftName={draftName}
-                  draft={draftItems[draftName]}
-                  draftDetails={draftDetails}
-                  setDraftDetails={setDraftDetails}
-                  setSelectedDraftName={setSelectedDraftName}
-                />
-              </div>
-            ))}
-        </div>
-      </section>
 
       <section
         className={`${
