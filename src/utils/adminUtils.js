@@ -29,7 +29,7 @@ export const updateProductsDatabaseFromCSV = async (parsedJSONFromCSV) => {
 
   try {
     const response = await axios.post(url, parsedJSONFromCSV);
-    console.log("File uploaded successfully", response);
+    console.log("File uploaded successfully", response.data);
   } catch (error) {
     console.error("Error uploading file", error);
   }
