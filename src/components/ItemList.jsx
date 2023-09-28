@@ -15,8 +15,6 @@ const ItemList = ({ products, manage = false }) => {
             products,
             modelNumber
           );
-          console.log(index);
-
           return (
             <li
               key={index}

@@ -7,32 +7,36 @@ import JSZip from "jszip";
 
 const BulkGenerateQR = () => {
   const ALL = "ALL";
+  const [CMG, setCMG] = useState({});
   const [company, setCompany] = useState("none");
-  const [existingCompanies, setExistingCompanies] = useState([]);
-  const [modelNumbers, setModelNumbers] = useState([]);
+  const [modelNumber, setModelNumber] = useState("none");
   const [selectedModelNumber, setSelectedModelNumber] = useState("none");
   const [filteredModelNumbers, setFilteredModelNumbers] = useState([]);
   const [dataUrls, setDataUrls] = useState([]);
 
-  const fetchCompanies = async () => {
-    try {
-      const response = await axios.get(baseUrl + "/company/getAllCompanies");
-      const companies = response.data.data;
-      companies.sort((a, b) => a.companyName.localeCompare(b.companyName));
-      setExistingCompanies(companies);
-    } catch (error) {
-      console.error("Error fetching companies:", error);
-    }
-  };
-
-  const getAllCompaniesModelNumbers = async () => {
+  const getAllCompaniesModelNumbersGroups = async () => {
     try {
       const response = await axios.get(
-        baseUrl + "/company/getAllCompaniesModelNumbers"
+        baseUrl + "/company/getAllCompaniesModelNumbersGroups"
       );
-      const allModelNumbers = response.data.data;
-      setModelNumbers(allModelNumbers);
-      setFilteredModelNumbers(allModelNumbers.map((row) => row.modelNumber));
+      const data = response.data.data;
+      let tempCMG = {};
+      for (let row of data) {
+        let company = row.company;
+        tempCMG[company] = {};
+
+        let modelNumbersArray = row.modelNumbers;
+        let allModelNumbers = modelNumbersArray.map(
+          ({ modelNumber }) => modelNumber
+        );
+        for (let model of allModelNumbers) {
+          tempCMG[company][model] = row.modelNumbers
+            .filter((item) => item.modelNumber === model)
+            .map((item) => item.groups);
+        }
+      }
+      setCMG(tempCMG);
+      console.log(tempCMG);
     } catch (error) {
       console.error("Error fetching model numbers:", error);
     }
@@ -40,19 +44,13 @@ const BulkGenerateQR = () => {
 
   const companyChange = (e) => {
     let selectedCompany = e.target.value;
-    const modelNumbersForSelectedCompany = modelNumbers.filter((row) =>
-      selectedCompany === ALL ? true : row.companies.includes(selectedCompany)
-    );
-    setFilteredModelNumbers(
-      modelNumbersForSelectedCompany.map((row) => row.modelNumber)
-    );
+    setModelNumber("none");
     setCompany(selectedCompany);
-    setSelectedModelNumber("none");
   };
 
   const modelNumberChange = (e) => {
     console.log(e.target.value);
-    setSelectedModelNumber(e.target.value);
+    setModelNumber(e.target.value);
   };
 
   // const qrCodeRef = useRef(null);
@@ -117,8 +115,7 @@ const BulkGenerateQR = () => {
   };
 
   useEffect(() => {
-    fetchCompanies();
-    getAllCompaniesModelNumbers();
+    getAllCompaniesModelNumbersGroups();
   }, []);
 
   return (
@@ -136,10 +133,9 @@ const BulkGenerateQR = () => {
               onChange={companyChange}
             >
               <option value="none">Select Company</option>
-              <option value={ALL}>All</option>
-              {existingCompanies.map((company) => (
-                <option key={company._id} value={company.companyName}>
-                  {company.companyName}
+              {Object.keys(CMG).map((company) => (
+                <option key={company} value={company}>
+                  {company}
                 </option>
               ))}
             </select>
@@ -150,18 +146,21 @@ const BulkGenerateQR = () => {
               className="w-full p-2 border border-gray-300 rounded"
               name="company"
               id="company"
-              value={selectedModelNumber}
+              value={modelNumber}
               onChange={modelNumberChange}
             >
               <option value="none">Select Model Number</option>
-              {filteredModelNumbers.map((modelNumber, index) => (
-                <option key={index} value={modelNumber}>
-                  {modelNumber}
-                </option>
-              ))}
+              {company !== "none" &&
+                CMG.hasOwnProperty(company) &&
+                Object.keys(CMG[company]).map((modelNumber, index) => (
+                  <option key={index} value={modelNumber}>
+                    {modelNumber}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
+
         <div>
           <p className="font-semibold text-sm">
             {company !== "none"
@@ -169,26 +168,47 @@ const BulkGenerateQR = () => {
               : "Please Select A Company"}
           </p>
         </div>
-        <div>
-          <button onClick={bulkGenerateQrCodes}>Bulk Generate QR Codes</button>
+
+        <div className="flex flex-col">
+          <button
+            onClick={bulkGenerateQrCodes}
+            className="w-64 px-3 py-2 border rounded-lg font-semibold bg-gray-700 hover:bg-gray-800 text-white transition-all"
+          >
+            Bulk Generate QR Codes
+          </button>
+          <button
+            onClick={downloadAllAsZip}
+            className="w-64 px-3 py-2 border rounded-lg font-semibold bg-gray-700 hover:bg-gray-800 text-white transition-all"
+          >
+            Download All as Zip
+          </button>
         </div>
-        <div>
-          <button onClick={bulkGenerateQrCodes}>Bulk Generate QR Codes</button>
-          <button onClick={downloadAllAsZip}>Download All as Zip</button>
-        </div>
+
+        {company !== "none" && modelNumber !== "none" && (
+          <div className="w-full">
+            <p className="font-semibold underline italic mb-2">Groups</p>
+            {console.log(CMG[company][modelNumber])}
+            <ul className="grid grid-cols-5 font-semibold text-white text-[10px] gap-2">
+              {CMG[company][modelNumber][0].map((group) => (
+                <li className="px-2 py-1 border w-fit rounded-lg bg-gray-500">
+                  {group}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
-      <section className="w-[50%] h-fit max-h-[92vh] overflow-y-scroll grid grid-cols-3 gap-y-3">
+      <section className="w-[50%] max-h-[92vh] overflow-y-scroll grid grid-cols-3 gap-y-3 border-l-2 border-gray-400">
         {company !== "none" &&
-          company !== ALL &&
-          filteredModelNumbers.length !== 0 &&
-          filteredModelNumbers.map((modelNumber, index) => (
-            <div className="flex flex-col justify-center place-items-center">
+          modelNumber !== "none" &&
+          CMG[company][modelNumber][0].map((group, index) => (
+            <div className="flex flex-col place-items-center p-1">
               <QRCode
                 key={index}
                 id={`qr_${index}`}
                 size={200}
                 fgColor="#003140"
-                value={`${company}|${modelNumber}`}
+                value={`${company}|${modelNumber}|${group}`}
                 level="L"
                 className="border-2 border-white p-5 rounded-md bg-white"
               />
