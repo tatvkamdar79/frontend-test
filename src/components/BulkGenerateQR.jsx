@@ -62,15 +62,15 @@ const BulkGenerateQR = () => {
 
     const generatedDataUrls = [];
 
-    filteredModelNumbers.forEach((modelNumber, index) => {
+    CMG[company][modelNumber][0].forEach((group, index) => {
       const qrCodeElement = document.getElementById(`qr_${index}`);
 
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
 
       // Set canvas dimensions with extra padding
-      const padding = 20; // Adjust this value for desired padding
-      canvas.width = qrCodeElement.width + 2 * padding; // Twice the padding for both sides
+      const padding = 5; // Adjust this value for desired padding
+      canvas.width = qrCodeElement.width + 2 * padding;
       canvas.height = qrCodeElement.height + 2 * padding;
 
       // Apply styles (padding and rounded borders)
@@ -79,10 +79,11 @@ const BulkGenerateQR = () => {
       context.drawImage(qrCodeElement, padding, padding); // Draw QR code with padding
 
       const imageSrc = canvas.toDataURL();
-      generatedDataUrls.push({ modelNumber, imageSrc });
+      generatedDataUrls.push({ group, imageSrc });
     });
 
     setDataUrls(generatedDataUrls);
+    console.log(generatedDataUrls);
   };
 
   const downloadAllAsZip = () => {
@@ -93,8 +94,8 @@ const BulkGenerateQR = () => {
 
     const zip = new JSZip();
 
-    dataUrls.forEach(({ modelNumber, imageSrc }, index) => {
-      const filename = `qr_code_${modelNumber}.png`; // Customize the filename as needed
+    dataUrls.forEach(({ group, imageSrc }, index) => {
+      const filename = `qr_code_${company}_${modelNumber}_${group}.png`; // Customize the filename as needed
       const blob = dataURItoBlob(imageSrc);
 
       zip.file(filename, blob);
@@ -118,6 +119,10 @@ const BulkGenerateQR = () => {
     getAllCompaniesModelNumbersGroups();
   }, []);
 
+  useEffect(() => {
+    setDataUrls([]);
+  }, [CMG, company, modelNumber]);
+
   return (
     <div className="w-full flex p-4">
       <section className="w-[50%] space-y-3">
@@ -133,8 +138,8 @@ const BulkGenerateQR = () => {
               onChange={companyChange}
             >
               <option value="none">Select Company</option>
-              {Object.keys(CMG).map((company) => (
-                <option key={company} value={company}>
+              {Object.keys(CMG).map((company, index) => (
+                <option key={index} value={company}>
                   {company}
                 </option>
               ))}
@@ -187,10 +192,13 @@ const BulkGenerateQR = () => {
         {company !== "none" && modelNumber !== "none" && (
           <div className="w-full">
             <p className="font-semibold underline italic mb-2">Groups</p>
-            {console.log(CMG[company][modelNumber])}
+            {/* {console.log(CMG[company][modelNumber])} */}
             <ul className="grid grid-cols-5 font-semibold text-white text-[10px] gap-2">
-              {CMG[company][modelNumber][0].map((group) => (
-                <li className="px-2 py-1 border w-fit rounded-lg bg-gray-500">
+              {CMG[company][modelNumber][0].map((group, index) => (
+                <li
+                  key={index}
+                  className="px-2 py-1 border w-fit rounded-lg bg-gray-500"
+                >
                   {group}
                 </li>
               ))}
@@ -202,19 +210,30 @@ const BulkGenerateQR = () => {
         {company !== "none" &&
           modelNumber !== "none" &&
           CMG[company][modelNumber][0].map((group, index) => (
-            <div className="flex flex-col place-items-center p-1">
+            <div key={index} className="flex flex-col place-items-center h-52">
               <QRCode
                 key={index}
                 id={`qr_${index}`}
-                size={200}
+                size={80}
                 fgColor="#003140"
                 value={`${company}|${modelNumber}|${group}`}
                 level="L"
-                className="border-2 border-white p-5 rounded-md bg-white"
+                className="border border-gray-400 p-1 rounded bg-transparent"
               />
-              <p>
-                {company} - {modelNumber}
-              </p>
+              <div className="w-full flex flex-col place-items-center font-semibold mt-2">
+                <div className="w-full flex place-items-center justify-between border-b border-gray-300">
+                  <span className="w-[30%]">Company -</span>
+                  <span className="w-[65%]"> {company}</span>
+                </div>
+                <div className="w-full flex place-items-center justify-between border-b border-gray-300">
+                  <span className="w-[30%]">Model -</span>
+                  <span className="w-[65%]"> {modelNumber}</span>
+                </div>
+                <div className="w-full flex place-items-center justify-between border-b border-gray-300">
+                  <span className="w-[30%]">Group -</span>
+                  <span className="w-[65%]"> {group}</span>
+                </div>
+              </div>
             </div>
           ))}
       </section>
