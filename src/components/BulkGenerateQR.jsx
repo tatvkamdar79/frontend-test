@@ -208,34 +208,71 @@ const BulkGenerateQR = () => {
       </section>
       <section className="w-[50%] max-h-[92vh] overflow-y-scroll grid grid-cols-3 gap-y-3 border-l-2 border-gray-400">
         {company !== "none" &&
-          modelNumber !== "none" &&
-          CMG[company][modelNumber][0].map((group, index) => (
-            <div key={index} className="flex flex-col place-items-center h-52">
-              <QRCode
+        Object.keys(CMG).length > 0 &&
+        modelNumber === "none"
+          ? Object.keys(CMG[company]).flatMap((modelNumber) =>
+              CMG[company][modelNumber][0].map((group, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col place-items-center h-52"
+                >
+                  <QRCode
+                    key={index}
+                    id={`qr_${index}`}
+                    size={80}
+                    fgColor="#003140"
+                    value={`Aqua|${modelNumber}|${group}`}
+                    level="L"
+                    className="border border-gray-400 p-1 rounded bg-transparent"
+                  />
+                  <div className="w-full flex flex-col place-items-center font-semibold mt-2">
+                    <div className="w-full flex place-items-center justify-between border-b border-gray-300">
+                      <span className="w-[30%]">Company -</span>
+                      <span className="w-[65%]">Aqua</span>
+                    </div>
+                    <div className="w-full flex place-items-center justify-between border-b border-gray-300">
+                      <span className="w-[30%]">Model -</span>
+                      <span className="w-[65%]">{modelNumber}</span>
+                    </div>
+                    <div className="w-full flex place-items-center justify-between border-b border-gray-300">
+                      <span className="w-[30%]">Group -</span>
+                      <span className="w-[65%]">{group}</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )
+          : modelNumber !== "none" &&
+            CMG[company][modelNumber][0].map((group, index) => (
+              <div
                 key={index}
-                id={`qr_${index}`}
-                size={80}
-                fgColor="#003140"
-                value={`${company}|${modelNumber}|${group}`}
-                level="L"
-                className="border border-gray-400 p-1 rounded bg-transparent"
-              />
-              <div className="w-full flex flex-col place-items-center font-semibold mt-2">
-                <div className="w-full flex place-items-center justify-between border-b border-gray-300">
-                  <span className="w-[30%]">Company -</span>
-                  <span className="w-[65%]"> {company}</span>
-                </div>
-                <div className="w-full flex place-items-center justify-between border-b border-gray-300">
-                  <span className="w-[30%]">Model -</span>
-                  <span className="w-[65%]"> {modelNumber}</span>
-                </div>
-                <div className="w-full flex place-items-center justify-between border-b border-gray-300">
-                  <span className="w-[30%]">Group -</span>
-                  <span className="w-[65%]"> {group}</span>
+                className="flex flex-col place-items-center h-52"
+              >
+                <QRCode
+                  key={index}
+                  id={`qr_${index}`}
+                  size={80}
+                  fgColor="#003140"
+                  value={`${company}|${modelNumber}|${group}`}
+                  level="L"
+                  className="border border-gray-400 p-1 rounded bg-transparent"
+                />
+                <div className="w-full flex flex-col place-items-center font-semibold mt-2">
+                  <div className="w-full flex place-items-center justify-between border-b border-gray-300">
+                    <span className="w-[30%]">Company -</span>
+                    <span className="w-[65%]"> {company}</span>
+                  </div>
+                  <div className="w-full flex place-items-center justify-between border-b border-gray-300">
+                    <span className="w-[30%]">Model -</span>
+                    <span className="w-[65%]"> {modelNumber}</span>
+                  </div>
+                  <div className="w-full flex place-items-center justify-between border-b border-gray-300">
+                    <span className="w-[30%]">Group -</span>
+                    <span className="w-[65%]"> {group}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
       </section>
     </div>
   );
