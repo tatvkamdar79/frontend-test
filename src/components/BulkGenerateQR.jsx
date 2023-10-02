@@ -252,7 +252,7 @@ const BulkGenerateQR = () => {
                   key={index}
                   id={`qr_${index}`}
                   size={80}
-                  fgColor="#003140"
+                  fgColor="#ffffff"
                   value={`${company}|${modelNumber}|${group}`}
                   level="L"
                   className="border border-gray-400 p-1 rounded bg-transparent"
