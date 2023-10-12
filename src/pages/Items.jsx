@@ -6,17 +6,19 @@ import { MdDelete } from "react-icons/md";
 import { getFullProductsDatabaseCSV } from "../utils/adminUtils";
 import BulkFileUpload from "../components/BulkFileUpload";
 import BulkGenerateQR from "../components/BulkGenerateQR";
+import GoogleSheets from "../components/GoogleSheets";
 
 const DRAFT = "DRAFT";
 const BULK_FILE_UPLOAD = "BULK_FILE_UPLOAD";
 const BULK_GENERATE_QR = "BULK_GENERATE_QR";
+const SHEETS = "SHEETS";
 
 const Items = () => {
   const [draftItems, setDraftItems] = useState({});
   const [openAddItemModal, setOpenAddItemModal] = useState(false);
   const [draftDetails, setDraftDetails] = useState(null);
   const [selectedDraftName, setSelectedDraftName] = useState(null);
-  const [view, setView] = useState(BULK_GENERATE_QR);
+  const [view, setView] = useState(SHEETS);
 
   const deleteDraft = (draftName) => {
     let tempDraftItems = localStorage.getItem("draftItems");
@@ -100,6 +102,12 @@ const Items = () => {
         </section>
       )}
 
+      {view === SHEETS && (
+        <section>
+          <GoogleSheets />
+        </section>
+      )}
+
       <section
         className={`${
           !openAddItemModal && "hidden"
@@ -169,6 +177,11 @@ const SideBar = ({ setOpenAddItemModal, setView }) => {
         <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
           <button onClick={() => setView(BULK_GENERATE_QR)} className="w-full">
             Bulk Generate QR
+          </button>
+        </div>
+        <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
+          <button onClick={() => setView(SHEETS)} className="w-full">
+            Google Sheets
           </button>
         </div>
       </ul>
