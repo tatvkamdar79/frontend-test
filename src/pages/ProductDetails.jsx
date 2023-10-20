@@ -5,156 +5,62 @@ import QRCode from "qrcode.react";
 const ProductDetails = () => {
   const { state } = useLocation();
   const { productVariants } = state;
-
   const [formData, setFormData] = useState(productVariants);
-  const [isEditing, setIsEditing] = useState(false);
-  const [showQRCode, setShowQRCode] = useState(false);
-  const [downloadedImageSrc, setDownloadedImageSrc] = useState("");
-
-  const toggleQRCode = () => {
-    setShowQRCode((prevState) => !prevState);
-  };
-
-  const convertQRCodeToImage = () => {
-    const qrCodeElement = document.getElementById("qr");
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-
-    // Set canvas dimensions with extra padding
-    const padding = 20; // Adjust this value for desired padding
-    canvas.width = qrCodeElement.width + 2 * padding; // Twice the padding for both sides
-    canvas.height = qrCodeElement.height + 2 * padding;
-
-    // Apply styles (padding and rounded borders)
-    context.fillStyle = "#ffffff"; // Set background color
-    context.fillRect(0, 0, canvas.width, canvas.height); // Fill canvas with background color
-    context.drawImage(qrCodeElement, padding, padding); // Draw QR code with padding
-
-    const imageSrc = canvas.toDataURL();
-
-    setDownloadedImageSrc(imageSrc);
-  };
-
-  const downloadImage = () => {
-    const img = document.getElementById("downloadedImage");
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    ctx.drawImage(img, 0, 0);
-
-    const dataURL = canvas.toDataURL("image/png");
-    const a = document.createElement("a");
-    a.href = dataURL;
-    a.download = `QR_${commonData.modelNumber}.png`;
-    a.click();
-  };
-
   const commonData = formData[0] ? formData[0] : null;
 
-  const handleChange = (index, key, value) => {
-    const updatedFormData = [...formData];
-    updatedFormData[index].variant[key] = value;
-    setFormData(updatedFormData);
-  };
+  const addImage = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const video = document.createElement("video");
+      const img = document.createElement("img");
 
-  const handleDelete = (index) => {
-    const updatedFormData = [...formData];
-    updatedFormData.splice(index, 1);
-    setFormData(updatedFormData);
-  };
+      video.srcObject = stream;
 
-  const handleCommonDataChange = (key, value) => {
-    const updatedCommonData = { ...commonData, [key]: value };
-    setFormData([updatedCommonData, ...formData.slice(1)]);
-  };
+      video.onloadedmetadata = () => {
+        video.play();
+      };
 
-  const handleSave = () => {
-    console.log("Form data saved:", formData);
+      const captureImage = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const dataUrl = canvas.toDataURL("image/jpeg");
+        img.src = dataUrl;
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      const captureButton = document.createElement("button");
+      captureButton.innerText = "Capture Image";
+      captureButton.addEventListener("click", captureImage);
+
+      document.body.appendChild(video);
+      document.body.appendChild(captureButton);
+      document.body.appendChild(img);
+    } catch (error) {
+      console.error("Error accessing camera:", error);
+    }
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-200 p-8">
-      <h1 className="text-2xl font-bold mb-4">Product Details</h1>
+    <div className="w-full min-h-screen bg-gray-200 xl:p-8 p-2">
+      <h1 className="text-2xl font-bold">Product Details</h1>
 
-      <div className="mb-4">
+      <div>
+        <h1 className="text-xl font-bold">Images</h1>
         <button
-          className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition-all"
-          onClick={() => setIsEditing(!isEditing)}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={addImage}
         >
-          {isEditing ? "Disable Editing" : "Enable Editing"}
+          Capture Image
         </button>
-      </div>
-
-      <div className="flex space-x-4 mb-4">
-        <button
-          className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded transition-all"
-          onClick={toggleQRCode}
-        >
-          Generate QR Code
-        </button>
-
-        {showQRCode && commonData && (
-          <button
-            className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded transition-all"
-            onClick={convertQRCodeToImage}
-          >
-            Convert to Image
-          </button>
-        )}
-
-        {showQRCode && downloadedImageSrc && (
-          <button
-            className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition-all"
-            onClick={downloadImage}
-          >
-            Download Image
-          </button>
-        )}
-      </div>
-
-      <div
-        className={`w-fit p-5 flex ${
-          showQRCode ? "h-96" : "h-0"
-        } gap-x-10 transition-all duration-300`}
-      >
-        {showQRCode && showQRCode && commonData && (
-          <div className="mb-8">
-            <h2 className="text-xl font-bold mb-2">Draft QR Code</h2>
-            <QRCode
-              id="qr"
-              size={200}
-              fgColor="#003140"
-              value={`${commonData.company}|${commonData.modelNumber}`}
-              level="L"
-              className="border-2 border-white p-5 rounded-md bg-white"
-            />
-          </div>
-        )}
-
-        {showQRCode && downloadedImageSrc && (
-          <div>
-            <h2 className="text-xl font-bold mb-2">Final QR Image</h2>
-            <div
-              id="imageContainer"
-              className="w-fit h-fit p-4 bg-white rounded-md"
-            >
-              <img
-                id="downloadedImage"
-                alt="Downloaded QR Code"
-                src={downloadedImageSrc}
-                className="rounded-md border-2 border-gray-600"
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       {commonData && <h2 className="text-xl font-bold mb-2">Common Data</h2>}
       {commonData && (
-        <div className="mb-8 grid grid-cols-3 gap-x-6">
+        <div className="mb-8 grid xl:grid-cols-3 grid-cols-1 gap-x-6">
           {Object.entries(commonData).map(([key, value]) => {
             if (key === "variant" || key === "_id") return null;
             return (
@@ -165,10 +71,7 @@ const ProductDetails = () => {
                 <input
                   type="text"
                   value={value}
-                  readOnly={!isEditing}
-                  onChange={(e) =>
-                    isEditing && handleCommonDataChange(key, e.target.value)
-                  }
+                  readOnly
                   className="border rounded px-3 py-2 w-full"
                 />
               </div>
@@ -190,7 +93,6 @@ const ProductDetails = () => {
                   {key}
                 </th>
               ))}
-              <th className="border border-gray-300 px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -207,39 +109,16 @@ const ProductDetails = () => {
                     <input
                       type="text"
                       value={value}
-                      readOnly={!isEditing}
-                      onChange={(e) =>
-                        isEditing &&
-                        handleChange(
-                          index,
-                          Object.keys(variant.variant)[i],
-                          e.target.value
-                        )
-                      }
+                      readOnly
                       className="w-full text-center"
                     />
                   </td>
                 ))}
-                <td className="border border-gray-300 px-4 py-2 text-center">
-                  <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                    onClick={() => handleDelete(index)}
-                  >
-                    Delete
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      <button
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
-        onClick={handleSave}
-      >
-        Save
-      </button>
     </div>
   );
 };

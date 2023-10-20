@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const [hidden, setHidden] = useState(true);
   return (
-    <nav className="w-full sticky top-0 flex justify-between px-20 py-2 bg-gray-200 border-b-2 border-gray-400">
+    <nav className="w-full sticky top-0 flex justify-between px-10 py-2 bg-gray-200 border-b-2 border-gray-400">
+      <div className="flex place-items-center justify-center gap-x-4">
+        <button
+          onClick={() => setHidden((hidden) => !hidden)}
+          className="xl:hidden flex h-full place-items-center"
+        >
+          <GiHamburgerMenu />
+        </button>
+        <p className="text-3xl font-semibold font-playfair">HH</p>
+      </div>
       <div className="flex">
-        <ul className="flex gap-x-5 text-lg text-gray-500 font-semibold">
+        <ul
+          className={`${
+            hidden ? "h-0" : "h-60"
+          } overflow-hidden flex xl:flex-row xl:h-fit flex-col place-items-center justify-center gap-2 text-lg text-gray-500 font-semibold transition-all`}
+        >
           <Link
             to={"/"}
             className="w-28 px-2 py-1 border rounded-md bg-white text-center shadow"

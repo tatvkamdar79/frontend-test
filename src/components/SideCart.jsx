@@ -56,7 +56,7 @@ const SideCart = () => {
   };
   return (
     <div
-      className={`fixed top-0 right-0 h-screen lg:w-1/2 w-[70%] overflow-x-hidden bg-white transition-all duration-700 transform ${
+      className={`fixed top-0 right-0 h-screen w-[95%] nm:w-1/2 overflow-x-hidden bg-white transition-all duration-700 transform ${
         viewSideCart ? "translate-x-0" : "translate-x-full"
       } p-10 border-l-2 border-gray-400`}
     >

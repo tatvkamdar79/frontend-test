@@ -75,7 +75,7 @@ const QRCodeScanner = ({
   };
 
   const sendImageToBackend = async (img) => {
-    console.log("sending imag to vbackend now");
+    console.log("sending imag to backend now");
     const cleanedBase64Data = img.replace(/^data:image\/\w+;base64,/, "");
     // console.log(cleanedBase64Data);
     // const url = "https://tatvk79.pythonanywhere.com/decode_qr";
@@ -89,6 +89,7 @@ const QRCodeScanner = ({
       { img: cleanedBase64Data },
       customHeaders
     );
+    // alert(String(response.data.qr_data));
     console.log(response.data.qr_data);
     let qr_data = response.data.qr_data;
 

@@ -4,6 +4,7 @@ import { baseUrl, productAPI } from "./constants";
 export const formatProductWithVariantsData = (products, modelNumber) => {
   let productWithVariants = products[modelNumber];
   let productTitle = productWithVariants[0].productTitle;
+  let company = productWithVariants[0].company;
   let variantCount = products[modelNumber].length;
 
   let minPrice = productWithVariants.reduce((min, product) => {
@@ -52,6 +53,7 @@ export const formatProductWithVariantsData = (products, modelNumber) => {
 
   return {
     productTitle,
+    company,
     minPrice: formattedMinPrice,
     maxPrice: formattedMaxPrice,
     variantCount,

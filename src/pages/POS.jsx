@@ -31,11 +31,11 @@ const POS = ({ products, setProducts, searchText, setSearchText }) => {
     };
   }, []);
   return (
-    <div className="w-screen h-[94vh] p-4 bg-gray-100 overflow-y-scroll overflow-x-hidden">
+    <div className="w-screen h-[94vh] p-0 nm:p-4 bg-gray-100 overflow-y-scroll overflow-x-hidden">
       <div className="w-full md:max-w-screen-2xl mx-auto">
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <section className="w-[92%] mx-auto flex place-items-center gap-x-2 p-2">
-            <div className="w-3/4 lg:w-2/3">
+          <section className="w-full nm:w-[92%] mx-auto flex place-items-center gap-x-1">
+            <div className="w-5/6 nm:w-3/4 lg:w-2/3">
               <Searchbar
                 setProducts={setProducts}
                 searchText={searchText}
@@ -43,32 +43,29 @@ const POS = ({ products, setProducts, searchText, setSearchText }) => {
                 setLoading={setLoading}
               />
             </div>
-            <div className="w-1/4 lg:w-1/3 mx-auto flex flex-col transition-all duration-300">
-              <div className="w-full flex justify-between place-items-center gap-x-2">
+            <div className="w-1/6 lg:w-1/3 mx-auto flex flex-col transition-all duration-300">
+              <div className="w-full flex justify-between place-items-center">
                 <button
-                  className="w-full flex justify-center place-items-center gap-x-2 px-4 py-3 rounded-md text-white bg-gray-500 hover:bg-gray-600 transition-all duration-300"
+                  className="w-full flex justify-center place-items-center py-3 rounded-md text-white bg-gray-500 hover:bg-gray-600 transition-all duration-300"
                   onClick={() => setOpenQRCodeScanner(!openQRCodeScanner)}
                 >
-                  <p className="font-semibold text-lg">
-                    {openQRCodeScanner ? "Close Scanner" : "Scan QR"}
-                  </p>
-                  <BsQrCodeScan size={23} />
+                  <BsQrCodeScan size={27} />
                 </button>
               </div>
             </div>
           </section>
-          <section className="w-[92%] mx-auto flex justify-between place-items-center gap-x-2 p-2">
-            <div className="w-3/4 lg:w-2/3">
+          <section className="w-full mx-auto flex flex-col nm:flex-row justify-between place-items-center my-2">
+            <div className="w-full lg:w-2/3">
               <CartComponent />
             </div>
             {/* mx-auto flex flex-col" */}
-            <Link
+            {/* <Link
               to={"/pos/checkout"}
               className="w-1/4 lg:w-1/3 flex justify-center place-items-center gap-x-2 px-4 py-3 rounded-md text-white bg-gray-500 hover:bg-gray-600 transition-all duration-300"
             >
               <p className="font-semibold text-lg">Checkout</p>
               <IoBagCheckOutline size={25} />
-            </Link>
+            </Link> */}
             {openQRCodeScanner && (
               <QRCodeScanner
                 openQRCodeScanner={openQRCodeScanner}
@@ -79,7 +76,7 @@ const POS = ({ products, setProducts, searchText, setSearchText }) => {
               />
             )}
           </section>
-          <div className="w-[92%] mx-auto h-0.5 bg-gray-400 my-2" />
+          <div className="w-full mx-auto h-0.5 bg-gray-400 my-2" />
           {loading && (
             <div className="flex justify-center mt-6">
               <Loader />

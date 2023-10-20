@@ -11,7 +11,7 @@ const CartComponent = () => {
   return (
     <div
       to={"/pos/checkout"}
-      className="w-full mx-auto flex justify-between place-items-center px-4 py-1 sm:py-3 bg-white border rounded-lg shadow-lg"
+      className="w-full mx-auto flex justify-between place-items-center px-3 py-2.5 sm:py-3 bg-white border rounded-lg shadow-lg"
     >
       <div className="flex gap-x-5">
         <p className="flex gap-x-2 text-gray-600">

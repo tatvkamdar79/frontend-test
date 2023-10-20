@@ -8,78 +8,88 @@ const ItemList = ({ products, manage = false }) => {
     console.log(products);
   }, [products]);
   return (
-    <div className="w-11/12 h-[68vh] mx-auto overflow-y-scroll">
+    <div
+      className={`w-full nm:w-11/12 ${
+        manage ? "h-[74vh]" : "h-[68vh]"
+      } mx-auto overflow-y-scroll`}
+    >
       <ul className="w-full space-y-4">
-        {Object.keys(products).map((modelNumber, index) => {
-          let productData = formatProductWithVariantsData(
-            products,
-            modelNumber
-          );
-          return (
-            <li
-              key={index}
-              className="p-4 bg-gray-100 rounded-md shadow-lg cursor-pointer hover:shadow-sm transition-all"
-            >
-              <Link
-                to={`${
-                  manage ? "/inventory/items/manage" : "/pos"
-                }/${modelNumber}`}
-                state={{ productVariants: products[modelNumber] }}
-                className="flex flex-col md:flex-row md:justify-between md:place-items-center text-lg"
+        {products &&
+          Object.keys(products).length > 0 &&
+          Object.keys(products).map((modelNumber, index) => {
+            let productData = formatProductWithVariantsData(
+              products,
+              modelNumber
+            );
+            return (
+              <li
+                key={index}
+                className="px-3 py-2 bg-white border-2 border-gray-300 rounded-md shadow-lg cursor-pointer hover:shadow-sm transition-all"
               >
-                <div>
-                  <p className="text-lg text-gray-800">
-                    {productData?.productTitle}
-                  </p>
-                  <p className="text-sm font-semibold text-gray-600">
-                    {productData?.variantCount} V
-                  </p>
-                  <p className="flex gap-x-2 text-sm font-semibold text-gray-600">
-                    {productData?.materials &&
-                      productData?.materials.length !== 0 && (
-                        <span>
-                          {productData?.materials.length}
-                          <span className="text-[10px]">M</span>
-                        </span>
-                      )}
-                    {productData?.sizes && productData?.sizes.length !== 0 && (
-                      <span>
-                        {productData?.sizes.length}
-                        <span className="text-[10px]">S</span>
-                      </span>
-                    )}
+                <Link
+                  to={`${
+                    manage ? "/inventory/items/manage" : "/pos"
+                  }/${modelNumber}`}
+                  state={{ productVariants: products[modelNumber] }}
+                  className="flex flex-col md:flex-row md:justify-between md:place-items-center text-lg"
+                >
+                  <div>
+                    <p className="font-semibold text-lg text-gray-700">
+                      {modelNumber}
+                    </p>
+                    <p className="text-lg text-gray-800">
+                      {productData.company}
+                    </p>
+                    <p className="text-sm font-semibold text-gray-600">
+                      {productData?.variantCount} {"V"}
+                    </p>
+                    <p className="flex gap-x-2 text-sm font-semibold text-gray-600">
+                      {productData?.materials &&
+                        productData?.materials.length !== 0 && (
+                          <span>
+                            {productData?.materials.length}
+                            <span className="text-[10px]">M</span>
+                          </span>
+                        )}
+                      {productData?.sizes &&
+                        productData?.sizes.length !== 0 && (
+                          <span>
+                            {productData?.sizes.length}
+                            <span className="text-[10px]">S</span>
+                          </span>
+                        )}
 
-                    {productData?.colors &&
-                      productData?.colors.length !== 0 && (
-                        <span>
-                          {productData?.colors.length}
-                          <span className="text-[10px]">C</span>
-                        </span>
-                      )}
+                      {productData?.colors &&
+                        productData?.colors.length !== 0 && (
+                          <span>
+                            {productData?.colors.length}
+                            <span className="text-[10px]">C</span>
+                          </span>
+                        )}
 
-                    {productData?.styles &&
-                      productData?.styles.length !== 0 && (
-                        <span>
-                          {productData?.styles.length}
-                          <span className="text-[10px]">S</span>t
-                        </span>
-                      )}
+                      {productData?.styles &&
+                        productData?.styles.length !== 0 && (
+                          <span>
+                            {productData?.styles.length}
+                            <span className="text-[10px]">S</span>t
+                          </span>
+                        )}
+                    </p>
+                  </div>
+                  <p className="font-semibold mr-2">
+                    ₹{" "}
+                    <span className="text-green-500">
+                      {productData?.minPrice}
+                    </span>{" "}
+                    -{" "}
+                    <span className="text-orange-400">
+                      {productData?.maxPrice}
+                    </span>
                   </p>
-                </div>
-                <p className="font-semibold mr-2">
-                  ₹{" "}
-                  <span className="text-green-500">
-                    {productData?.minPrice}
-                  </span>{" "}
-                  -{" "}
-                  <span className="text-orange-400">
-                    {productData?.maxPrice}
-                  </span>
-                </p>
-              </Link>
-            </li>
-          );
-        })}
+                </Link>
+              </li>
+            );
+          })}
       </ul>
     </div>
   );

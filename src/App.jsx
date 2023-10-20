@@ -18,6 +18,7 @@ export const UserContext = createContext();
 export const CartContext = createContext();
 export const ViewSideCartContext = createContext();
 export const GlobalDiscountContext = createContext();
+export const SearchContext = createContext();
 
 const App = () => {
   const { checkIsUserAuthenticatedAlready } = useCookies();
@@ -52,65 +53,69 @@ const App = () => {
             <ViewSideCartContext.Provider
               value={{ viewSideCart, setViewSideCart }}
             >
-              <GlobalDiscountContext.Provider
-                value={{ globalDiscount, setGlobalDiscount }}
+              <SearchContext.Provider
+                value={{ products, setProducts, searchText, setSearchText }}
               >
-                <Navbar />
-                <Routes>
-                  {user && user?.isAuthenticated && user?.isAuthenticated ? (
-                    // PLACE ALL PROTECTED ROUTES HERE
-                    <>
-                      <Route path="/" element={<Dashboard />} />
-                      <Route
-                        path="/pos"
-                        element={
-                          <POS
-                            products={products}
-                            setProducts={setProducts}
-                            searchText={searchText}
-                            setSearchText={setSearchText}
-                          />
-                        }
-                      />
-                      <Route path="/pos/:modelNumber" element={<Product />} />
-                      <Route path="/pos/checkout" element={<Checkout />} />
+                <GlobalDiscountContext.Provider
+                  value={{ globalDiscount, setGlobalDiscount }}
+                >
+                  <Navbar />
+                  <Routes>
+                    {user && user?.isAuthenticated && user?.isAuthenticated ? (
+                      // PLACE ALL PROTECTED ROUTES HERE
+                      <>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route
+                          path="/pos"
+                          element={
+                            <POS
+                              products={products}
+                              setProducts={setProducts}
+                              searchText={searchText}
+                              setSearchText={setSearchText}
+                            />
+                          }
+                        />
+                        <Route path="/pos/:modelNumber" element={<Product />} />
+                        <Route path="/pos/checkout" element={<Checkout />} />
 
-                      <Route path="/inventory" element={<Inventory />} />
-                      <Route path="/inventory/items" element={<Items />} />
-                      <Route
-                        path="/inventory/items/manage"
-                        element={
-                          <ManageProducts
-                            products={products}
-                            setProducts={setProducts}
-                            searchText={searchText}
-                            setSearchText={setSearchText}
-                          />
-                        }
-                      />
-                      <Route
-                        path="/inventory/items/manage/:modelNumber"
-                        element={
-                          <ProductDetails
-                            products={products}
-                            setProducts={setProducts}
-                            searchText={searchText}
-                            setSearchText={setSearchText}
-                          />
-                        }
-                      />
-                      <Route
-                        path="/inventory/add-company"
-                        element={<AddCompany />}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Route path="*" element={<Login />} />
-                    </>
-                  )}
-                </Routes>
-              </GlobalDiscountContext.Provider>
+                        <Route path="/inventory" element={<Inventory />} />
+                        <Route path="/inventory/items" element={<Items />} />
+                        <Route
+                          path="/inventory/items/manage"
+                          element={
+                            <ManageProducts
+                              products={products}
+                              setProducts={setProducts}
+                              searchText={searchText}
+                              setSearchText={setSearchText}
+                            />
+                          }
+                        />
+                        <Route
+                          path="/inventory/items/manage/:modelNumber"
+                          element={
+                            <ProductDetails
+                              products={products}
+                              setProducts={setProducts}
+                              searchText={searchText}
+                              setSearchText={setSearchText}
+                            />
+                          }
+                        />
+                        <Route
+                          path="/inventory/add-company"
+                          element={<AddCompany />}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Route path="*" element={<Login />} />
+                      </>
+                    )}
+                  </Routes>
+                </GlobalDiscountContext.Provider>
+              </SearchContext.Provider>
             </ViewSideCartContext.Provider>
           </CartContext.Provider>
         </BreadCrumbsContext.Provider>

@@ -9,7 +9,7 @@ export default {
         pts: ["PT Serif", "sans-serif"],
       },
       screens: {
-        xs: "480px",
+        nm: "480px",
       },
     },
   },
