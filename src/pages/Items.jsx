@@ -28,7 +28,7 @@ const Items = () => {
         </section>
       )}
       {view === BULK_GENERATE_QR && (
-        <section className="w-[75%] xl:w-[85%] p-5">
+        <section className="w-[75%] xl:w-[85%] nm:px-2 nm:py-3">
           <BulkGenerateQR />
         </section>
       )}
@@ -60,7 +60,7 @@ const SideBar = ({ setView }) => {
             Manage Items
           </button>
         </div>
-        <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
+        {/* <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
           <button
             onClick={() => {
               setView(BULK_FILE_UPLOAD);
@@ -69,8 +69,8 @@ const SideBar = ({ setView }) => {
           >
             Bulk Upload
           </button>
-        </div>
-        <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
+        </div> */}
+        {/* <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
           <button
             onClick={async () => {
               const res = await getFullProductsDatabaseCSV();
@@ -79,7 +79,7 @@ const SideBar = ({ setView }) => {
           >
             Download Full Database Excel
           </button>
-        </div>
+        </div> */}
         <div className="w-full text-start font-semibold border border-gray-400 rounded-xl px-2 py-1 hover:scale-[102%] hover:text-black hover:bg-gray-400 transition-all cursor-pointer">
           <button onClick={() => setView(BULK_GENERATE_QR)} className="w-full">
             Bulk Generate QR

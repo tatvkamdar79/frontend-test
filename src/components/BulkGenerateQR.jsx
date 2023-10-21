@@ -145,10 +145,10 @@ const BulkGenerateQR = () => {
   }, [company, modelNumber, group]);
 
   return (
-    <div className="w-[84vw] flex flex-col xl:flex-row px-3 py-2">
+    <div className="nm:w-[84vw] flex flex-col nm:flex-row overflow-x-hidden">
       <section className="w-full xl:w-[20%] xl:h-[92vh] space-y-3 mb-4 xl:mb-0">
         <p className="text-2xl font-bold underline">Filters</p>
-        <div className="grid grid-cols-3 xl:grid-cols-1 justify-start gap-y-4">
+        <div className="grid nm:grid-cols-3 xl:grid-cols-1 justify-start gap-y-4">
           <div className="space-y-2">
             <p className="text-xl font-semibold">Company</p>
             <select
@@ -234,7 +234,7 @@ const BulkGenerateQR = () => {
           </button>
         </div>
       </section>
-      <section className="w-full xl:w-[80%] max-h-[72vh] xl:max-h-[92vh] overflow-y-scroll grid grid-cols-3 gap-5 border-l-2 border-gray-400 px-3 py-1">
+      <section className="w-full xl:w-[80%] h-[51vh] nm:max-h-[72vh] xl:max-h-[92vh] overflow-y-scroll grid nm:grid-cols-3 gap-5 border-l-2 border-gray-400 px-3 py-1">
         {filtered.map(({ company, modelNumber, group }, index) => (
           <div
             key={index}
