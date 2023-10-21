@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # LOCAL VARIABLES
-src\utils\constants.js
+./src/utils/constants.js
