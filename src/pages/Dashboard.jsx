@@ -36,6 +36,15 @@ const Dashboard = () => {
           </h2>
           <p className="text-gray-500">Manage your customer records.</p>
         </Link>
+        <Link
+          to={"/settings"}
+          className="p-4 bg-white rounded shadow-lg shadow-gray-400 transition-shadow duration-300 hover:shadow-none cursor-pointer"
+        >
+          <h2 className="text-2xl text-gray-700 font-opensans font-bold mb-2">
+            Settings
+          </h2>
+          <p className="text-gray-500">Manage your customer records.</p>
+        </Link>
         {/* <img src={`${baseUrl}/x.jpg`} alt="khjgg" /> */}
       </div>
     </div>

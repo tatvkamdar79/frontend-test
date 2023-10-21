@@ -12,6 +12,7 @@ import AddCompany from "./pages/AddCompany";
 import ManageProducts from "./pages/ManageProducts";
 import ProductDetails from "./pages/ProductDetails";
 import Navbar from "./components/Navbar";
+import Settings from "./pages/Settings";
 
 export const BreadCrumbsContext = createContext();
 export const UserContext = createContext();
@@ -107,6 +108,7 @@ const App = () => {
                           path="/inventory/add-company"
                           element={<AddCompany />}
                         />
+                        <Route path="/settings" element={<Settings />} />
                       </>
                     ) : (
                       <>
