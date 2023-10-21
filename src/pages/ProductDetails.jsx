@@ -84,7 +84,6 @@ const ProductDetails = () => {
         <table className="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border border-gray-300 px-4 py-2">Variant Type</th>
               {Object.keys(formData[0].variant).map((key) => (
                 <th
                   key={key}
@@ -101,9 +100,6 @@ const ProductDetails = () => {
                 key={variant._id}
                 className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
               >
-                <td className="border border-gray-300 px-4 py-2">
-                  {variant.variant.color}
-                </td>
                 {Object.values(variant.variant).map((value, i) => (
                   <td key={i} className="border border-gray-300 px-4 py-2">
                     <input

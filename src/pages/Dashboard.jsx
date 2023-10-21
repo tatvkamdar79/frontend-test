@@ -36,7 +36,7 @@ const Dashboard = () => {
           </h2>
           <p className="text-gray-500">Manage your customer records.</p>
         </Link>
-        <img src={`${baseUrl}/x.jpg`} alt="khjgg" />
+        {/* <img src={`${baseUrl}/x.jpg`} alt="khjgg" /> */}
       </div>
     </div>
   );
