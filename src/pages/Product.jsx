@@ -61,9 +61,7 @@ const Product = () => {
         tempImages.push({ product_id: p._id, imgUrl: imgUrl })
       )
     );
-    // console.log(tempImages);
     setImages(tempImages);
-    console.log("tempImages", tempImages);
   }, []);
 
   const availableFilters = {};

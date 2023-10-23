@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { baseUrl } from "../utils/constants";
+import { GrClose } from "react-icons/gr";
 import axios from "axios";
 
 const AddImageModal = ({
@@ -73,8 +74,11 @@ const AddImageModal = ({
         }
       );
       console.log("Image uploaded successfully:", response.data);
+      setShowAddImageModal(false);
     } catch (error) {
+      alert("Some Error Occured, Try Again");
       console.error("Error uploading image:", error);
+      setShowAddImageModal(false);
     }
   };
 
@@ -84,7 +88,15 @@ const AddImageModal = ({
 
   return (
     <div className="fixed top-0 left-0 w-full h-screen bg-gray-200 bg-opacity-40 flex place-items-center justify-center">
-      <div className="w-11/12 nm:w-5/6 h-4/5 flex flex-col place-items-center py-5 border-2 border-gray-600 bg-gray-100 space-y-2">
+      <div className="w-11/12 nm:w-5/6 h-4/5 flex flex-col place-items-center py-5 border-2 border-gray-600 bg-gray-100 space-y-2 relative">
+        <GrClose
+          onClick={() => {
+            closeCamera();
+            setShowAddImageModal(false);
+          }}
+          size={30}
+          className="absolute top-2 left-2 cursor-pointer"
+        />
         {img === null && (
           <div className="relative">
             <video ref={videoRef} autoPlay playsInline />
