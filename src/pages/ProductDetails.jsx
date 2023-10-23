@@ -48,14 +48,9 @@ const ProductDetails = () => {
     <div className="w-full min-h-screen bg-gray-200 xl:p-8 p-2">
       <h1 className="text-2xl font-bold">Product Details</h1>
 
-      <div>
+      <div className="my-4">
         <h1 className="text-xl font-bold">Images</h1>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={addImage}
-        >
-          Capture Image
-        </button>
+        <h1 className="text-xl font-bold">Images will come here</h1>
       </div>
 
       {commonData && <h2 className="text-xl font-bold mb-2">Common Data</h2>}

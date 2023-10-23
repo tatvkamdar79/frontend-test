@@ -234,7 +234,7 @@ const BulkGenerateQR = () => {
           </button>
         </div>
       </section>
-      <section className="w-full xl:w-[80%] h-[51vh] nm:max-h-[72vh] xl:max-h-[92vh] overflow-y-scroll grid nm:grid-cols-3 gap-5 border-l-2 border-gray-400 px-3 py-1">
+      <section className="w-full xl:w-[80%] h-[51vh] nm:h-full nm:max-h-[72vh] xl:max-h-[92vh] overflow-y-scroll grid nm:grid-cols-3 gap-5 border-l-2 border-gray-400 px-3 py-1">
         {filtered.map(({ company, modelNumber, group }, index) => (
           <div
             key={index}

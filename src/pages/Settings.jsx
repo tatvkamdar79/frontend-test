@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { baseUrl } from "../utils/constants";
+import { AiFillDelete } from "react-icons/ai";
 
 const Settings = () => {
   const [fetchedUsers, setFetchedUsers] = useState([]);
@@ -56,9 +57,9 @@ const Settings = () => {
               </p>
               <button
                 onClick={() => deleteUser(index)}
-                className="w-28 px-2 py-1 text-white font-semibold bg-red-600 hover:bg-red-700 rounded-md transition-all"
+                className="w-10 px-2 py-1 font-semibold text-red-600 hover:bg-red-600 hover:text-white rounded-md transition-all"
               >
-                Delete User
+                <AiFillDelete size={25} />
               </button>
             </div>
           ))}
@@ -66,7 +67,10 @@ const Settings = () => {
       </section>
       <section></section>
       {showAddUserModal && (
-        <AddUserModal setShowAddUserModal={setShowAddUserModal} />
+        <AddUserModal
+          setShowAddUserModal={setShowAddUserModal}
+          getAllUsers={getAllUsers}
+        />
       )}
     </div>
   );
@@ -74,7 +78,7 @@ const Settings = () => {
 
 export default Settings;
 
-const AddUserModal = ({ setShowAddUserModal }) => {
+const AddUserModal = ({ setShowAddUserModal, getAllUsers }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -85,6 +89,7 @@ const AddUserModal = ({ setShowAddUserModal }) => {
         password,
       });
       alert(response.data.message);
+      getAllUsers();
       setShowAddUserModal(false);
     } catch (error) {
       const message = error.response.data.message;

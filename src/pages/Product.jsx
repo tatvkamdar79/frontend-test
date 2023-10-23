@@ -3,11 +3,16 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import useCart from "../hooks/useCart";
 import { baseUrl } from "../utils/constants";
+import axios from "axios";
+import AddImageModal from "../components/AddImageModal";
+import Carousel from "../components/Carousel";
 
 const Product = () => {
   const { modelNumber } = useParams();
   const { state } = useLocation();
   const { productVariants } = state;
+
+  const [showAddImageModal, setShowAddImageModal] = useState(false);
 
   const [images, setImages] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
@@ -30,13 +35,35 @@ const Product = () => {
     });
   });
 
+  const handleAddImageToProduct = async (imageData) => {
+    // Make API call to send image data to the backend
+    try {
+      const response = await axios.post(
+        `${baseUrl}/product/addImageToProduct`,
+        {
+          method: "POST",
+          body: JSON.stringify({ image: imageData }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Image uploaded successfully:", response);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
   useEffect(() => {
     const tempImages = [];
     productVariants.forEach((p) =>
-      p.images.forEach((image) => tempImages.push(image))
+      p.images.forEach((imgUrl) =>
+        tempImages.push({ product_id: p._id, imgUrl: imgUrl })
+      )
     );
     // console.log(tempImages);
     setImages(tempImages);
+    console.log("tempImages", tempImages);
   }, []);
 
   const availableFilters = {};
@@ -165,13 +192,22 @@ const Product = () => {
             />
           </>
         ) : (
-          images.map((imgUrl, index) => (
-            <img
-              key={index}
-              src={`${baseUrl}/${imgUrl}`}
-              alt="Error Loading Image"
-            />
-          ))
+          <Carousel images={images} />
+        )}
+        <button
+          onClick={() => setShowAddImageModal(true)}
+          className="mt-10 px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-700"
+        >
+          Add Images
+        </button>
+        {showAddImageModal && (
+          <AddImageModal
+            productVariants={productVariants}
+            setShowAddImageModal={setShowAddImageModal}
+            showAddImageModal={showAddImageModal}
+
+            // addImageToProduct={handleAddImageToProduct}
+          />
         )}
       </section>
     </div>
