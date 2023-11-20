@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { baseUrl } from "../utils/constants";
 import axios from "axios";
 
-const Carousel = ({ images }) => {
+const Carousel = ({ images, setImages }) => {
   const settings = {
     dots: true,
     infinite: true,
@@ -16,7 +16,7 @@ const Carousel = ({ images }) => {
     autoplaySpeed: 2000,
   };
 
-  const deleteImage = async (product_id, imagePath) => {
+  const deleteImage = async (product_id, imagePath, index) => {
     const response = await axios.post(
       `${baseUrl}/product/deleteImageFromProduct`,
       {
@@ -25,6 +25,11 @@ const Carousel = ({ images }) => {
       }
     );
     console.log(response);
+    const newImages = [...images]
+    // alert(JSON.stringify(newImages))
+    newImages.splice(index, 1);
+    // alert(JSON.stringify(newImages))
+    setImages(newImages);
   };
 
   return (
@@ -37,7 +42,7 @@ const Carousel = ({ images }) => {
             className="rounded-md"
           />
           <button
-            onClick={() => deleteImage(product_id, imgUrl)}
+            onClick={() => deleteImage(product_id, imgUrl, index)}
             className="w-24 px-2 py-1 bg-red-500 rounded-md border border-gray-200 text-white"
           >
             Delete
