@@ -9,6 +9,8 @@ import { MdClose } from "react-icons/md";
 import { BsCurrencyRupee } from "react-icons/bs";
 import useCart from "../hooks/useCart";
 import { FaMinus, FaPlus } from "react-icons/fa6";
+import axios from "axios";
+import { baseUrl } from "../utils/constants";
 
 const SideCart = () => {
   const { cart } = useContext(CartContext);
@@ -38,6 +40,42 @@ const SideCart = () => {
     if (shouldClear) {
       clearCart();
     }
+  };
+
+  const handleSendQuotation = async () => {
+    console.log(cart);
+    let message =
+      "Hello from *Hyderabad Hardware*\n*Thank You for requesting a quote*\n\nBelow is a quote for the items requested\n\n----------------------------------------\n";
+    cart.forEach((item, index) => {
+      message += `*Product ${index + 1}:*\n`;
+      message += `Company: *${item.product.company}*\n`;
+      message += `Model Number: *${item.product.modelNumber}*\n`;
+      message += `Group: *${item.product.group}*\n`;
+      message += `MRP: *${item.product.mrp}*\n`;
+      message += `Quantity: *${item.quantity}*\n`; // Assuming stock is represented by quantity
+      if (
+        showFinalPriceForItem(item.product) !==
+        showOriginalPriceForItem(item.product)
+      ) {
+        message += `Final Price: ~${showOriginalPriceForItem(
+          item.product
+        )}~ *${showFinalPriceForItem(item.product)}*`;
+      } else {
+        message += `Final Price ${showOriginalPriceForItem(item.product)}`;
+      }
+      message += "\n\n"; // Add a newline for better readability
+      message += "-------------------"; // Add a newline for better readability
+      message += "\n\n"; // Add a newline for better readability
+    });
+    message += `Total Price : ${getTotalPriceForCart(18)}`;
+    console.log(message);
+
+    const response = await axios.post(`${baseUrl}/send_quotation`, {
+      phone_number: "+919849244555",
+      // phone_number: "+919014701727",
+      message: message,
+    });
+    console.log(response);
   };
   const getVariantDetails = (product) => {
     if (product.variant) {
@@ -239,6 +277,13 @@ const SideCart = () => {
                 disabled={cart.length === 0}
               >
                 Proceed to Payment
+              </button>
+              <button
+                className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg"
+                onClick={handleSendQuotation}
+                disabled={cart.length === 0}
+              >
+                Send Quotation
               </button>
               <button
                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"

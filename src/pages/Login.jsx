@@ -25,7 +25,7 @@ const Login = () => {
       const response = await login(username, password);
       if (response.success) {
         console.log("SUCCESS");
-        setCookie("AUTHENTICATION", username, 1);
+        setCookie("AUTHENTICATION", username, 1000);
         setUser({ isAuthenticated: true, userData: response.data });
         localStorage.setItem(
           "user",
