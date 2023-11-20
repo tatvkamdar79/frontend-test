@@ -10,7 +10,7 @@ const SHEETS = "SHEETS";
 const MANAGE_ITEMS = "MANAGE_ITEMS";
 
 const Items = () => {
-  const [view, setView] = useState(MANAGE_ITEMS);
+  const [view, setView] = useState(SHEETS);
   const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
