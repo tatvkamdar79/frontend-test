@@ -40,12 +40,17 @@ const GoogleSheets = () => {
     const sheetIds = sheets
       .filter(({ _id }) => selectedSheets.includes(_id))
       .map(({ sheetId }) => sheetId);
-    const response = await axios.post(
-      `${baseUrl}${googleSheetsAPI}/syncGoogleSheet`,
-      { spreadsheetIds: sheetIds }
-    );
-    alert(response.data.message);
-    console.log(response);
+    try {
+      const response = await axios.post(
+        `${baseUrl}${googleSheetsAPI}/syncGoogleSheet`,
+        { spreadsheetIds: sheetIds }
+      );
+      alert(response.data.message);
+      console.log(response);
+    } catch (error) {
+      console.log(error.response.data.message);
+      alert(error.response.data.message);
+    }
   };
 
   return (
