@@ -76,7 +76,7 @@ const AddImageModal = ({
       console.log("Image uploaded successfully:", response.data);
       setShowAddImageModal(false);
     } catch (error) {
-      alert("Some Error Occured, Try Again");
+      alert("Some Error Occured, Try Again", JSON.stringify(error));
       console.error("Error uploading image:", error);
       setShowAddImageModal(false);
     }

@@ -190,7 +190,7 @@ const Product = () => {
             />
           </>
         ) : (
-          <Carousel images={images} />
+          <Carousel images={images} setImages={setImages} />
         )}
         <button
           onClick={() => setShowAddImageModal(true)}
