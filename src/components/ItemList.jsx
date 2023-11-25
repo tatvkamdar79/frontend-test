@@ -29,7 +29,7 @@ const ItemList = ({ products, manage = false }) => {
                 <Link
                   to={`${
                     manage ? "/inventory/items/manage" : "/pos"
-                  }/${modelNumber}`}
+                  }/${encodeURIComponent(modelNumber)}`}
                   state={{ productVariants: products[modelNumber] }}
                   className="flex flex-col md:flex-row md:justify-between md:place-items-center text-lg"
                 >
